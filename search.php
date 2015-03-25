@@ -91,28 +91,10 @@ table#items tr:nth-child(even) {
 				</form>
 			</div>
 		</center>
-			<div id="navbar" class="column">
-				<table id="items" width="100%" cellpadding="7px">
-					<tbody align="center">
-					<tr><td>Computer Hardware</td></tr>
-					<tr><td>Monitors</td></tr>
-					<tr><td>Keyboards</td></tr>
-					<tr><td>Mice</td></tr>
-					<tr><td>Laptops</td></tr>
-					<tr><td>Desktop PCs</td></tr>
-					<tr><td>Printers</td></tr>
-					<tr><td>Networking</td></tr>
-					<tr><td>Software</td></tr>
-					<tr><td>External Memory</td></tr>
-					<tr><td>Sale</td></tr>
-					</tbody>
-				</table>
-			</div>
-	
 		<center>
 
 <?php
-   $title = "SQL Query Test";
+   $title = "Search bar input test";
    echo nl2br($title);
    try{
    if(!$pdo = new PDO('mysql:host=localhost;dbname=computerstoredb',
@@ -124,20 +106,16 @@ table#items tr:nth-child(even) {
     exit;
 	}
 	
-	$yay = "\r\n Hooray, we connected \r\n";
+	$yay = "\r\n Hooray, we connected to MySQL \r\n";
 	echo nl2br($yay);
 	}
 	catch (PDOException $Exception){
 		$error = "\r\nCould not connect: " . $Exception->getMessage( );
 		echo nl2br($error);
 	}
-	
-	$sql = "SELECT c_name FROM customer_account ORDER BY c_name";
-	echo "Customers: <br />";
-	foreach ($pdo->query($sql) as $row) {
-		echo nl2br($row['c_name']);
-		echo "<br />";
-	}
+	echo "You searched for: ";
+	echo $_POST['search'];
+	echo "<br />";
 	
 ?>
 
