@@ -152,7 +152,7 @@ INSERT INTO Supplier (s_name,s_phone_num,s_address) VALUES('Intel',1690006,'Ware
 INSERT INTO Supplier (s_name,s_phone_num,s_address) VALUES('Logitech',1690007,'Warehouse 7');
 INSERT INTO Supplier (s_name,s_phone_num,s_address) VALUES('MSI',1690008,'Warehouse 8');
 INSERT INTO Supplier (s_name,s_phone_num,s_address) VALUES('Samsung',1690009,'Warehouse 9');
-INSERT INTO Supplier (s_name,s_phone_num,s_address) VALUES('Zotac',1690010,'Warehouse 10');
+INSERT INTO Supplier (s_name,s_phone_num,s_address) VALUES('Corsair',1690010,'Warehouse 10');
 
 INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('AMD','FX 6300',6300,5,'Processor',110);
 INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('AMD','FX 6350',6301,3,'Processor',130);
