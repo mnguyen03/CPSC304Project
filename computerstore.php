@@ -85,9 +85,17 @@ table#items tr:nth-child(even) {
 			<div id="nav"><h2><a href="login.php">Login</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;My Account&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Shopping Cart</h2></div>
 			<div id="searchbar">
 				<form action="search.php" method="post">
+				<select name="itemType">
+					<option value="0">Select an item type</option>
+					<option value="1">Test1</option>
+					<option value="2">Test2</option>
+					<option value="3">Test3</option>
+					<option value="4">Test4</option>
+					<option value="5">Test5</option>
+					<option value="6">Test6</option>
+				</select>	
 				<input type="text" name="search" class="search" value=""></input>
 				<input type="submit" value="Search"/>
-				<input type="submit" value="Advanced Search"/>
 				</form>
 			</div>
 		</center>
@@ -117,7 +125,7 @@ table#items tr:nth-child(even) {
    try{
    if(!$pdo = new PDO('mysql:host=localhost;dbname=computerstoredb',
     'root',
-    'admin_1')
+    'admin1')
 	){
 	$sad = "\r\n :( \r\n";
 	echo nl2br($sad);
