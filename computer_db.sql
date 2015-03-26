@@ -1,16 +1,14 @@
 drop table if exists Admin_Manages cascade;
+drop table if exists Purchase_ShippingMethod cascade;
 drop table if exists Admin_Edits cascade;
 drop table if exists PurchaseHistory_Contains_Purchase cascade;
 drop table if exists Admin cascade;
 drop table if exists ShoppingCart cascade;
-drop table if exists Purchase_ShippingMethod cascade;
 drop table if exists Customer_Account cascade;
+drop table if exists ShippingMethod cascade;
+drop table if exists Purchase cascade;
 drop table if exists Supplies_Item cascade;
 drop table if exists Supplier cascade;
-drop table if exists Purchase cascade;
-drop table if exists ShippingMethod cascade;
-
-
 
 CREATE TABLE Admin(
 	e_id INT NOT NULL,
@@ -40,9 +38,10 @@ CREATE TABLE Supplies_Item(
  	s_stock INT,
  	s_type VARCHAR(30),
  	s_price INT,
- 	PRIMARY KEY (s_name, s_pid),
+ 	PRIMARY KEY (s_pid, s_name),
  	FOREIGN KEY (s_name)
  	REFERENCES Supplier(s_name)
+	ON UPDATE CASCADE ON DELETE CASCADE
  	);
 
 CREATE TABLE ShoppingCart(
@@ -63,7 +62,7 @@ CREATE TABLE Purchase(
 	s_name VARCHAR(30),
  	date DATE,
  	amount INT,
- 	PRIMARY KEY (tid, s_pid),
+ 	PRIMARY KEY (tid, s_pid, s_name),
 	CONSTRAINT link_item FOREIGN KEY (s_pid, s_name)
 	REFERENCES Supplies_Item(s_pid, s_name)
  	);
@@ -73,6 +72,7 @@ CREATE TABLE Purchase_ShippingMethod(
  	tid INT,
  	PRIMARY KEY (tid),
  	FOREIGN KEY (tid) REFERENCES Purchase(tid)
+	ON DELETE CASCADE ON UPDATE CASCADE
  	);
 
 CREATE TABLE ShippingMethod(
@@ -86,8 +86,10 @@ CREATE TABLE Admin_Manages(
  	c_id INT NOT NULL,
  	e_id INT NOT NULL,
  	PRIMARY KEY (c_id, e_id),
- 	FOREIGN KEY (c_id) REFERENCES Customer_Account(c_id),
+ 	FOREIGN KEY (c_id) REFERENCES Customer_Account(c_id)
+	ON DELETE CASCADE ON UPDATE CASCADE,
  	FOREIGN KEY (e_id) REFERENCES Admin(e_id)
+	ON DELETE CASCADE ON UPDATE CASCADE
  	);
 
 CREATE TABLE Admin_Edits(
@@ -95,7 +97,8 @@ CREATE TABLE Admin_Edits(
  	s_name VARCHAR(30) NOT NULL,
  	s_pid INT NOT NULL,
  	PRIMARY KEY (e_id, s_pid, s_name),
- 	FOREIGN KEY (e_id) REFERENCES Admin(e_id),
+ 	FOREIGN KEY (e_id) REFERENCES Admin(e_id)
+	ON DELETE CASCADE ON UPDATE CASCADE,
  	CONSTRAINT edit_stock FOREIGN KEY (s_name, s_pid)
  	REFERENCES Supplies_Item(s_name, s_pid)
  	ON UPDATE CASCADE ON DELETE CASCADE
@@ -104,9 +107,11 @@ CREATE TABLE Admin_Edits(
 CREATE TABLE PurchaseHistory_Contains_Purchase(
  	c_id INT NOT NULL,
  	tid INT,
- 	PRIMARY KEY (c_id),
- 	FOREIGN KEY (c_id) REFERENCES Customer_Account(c_id),
+ 	KEY (c_id),
+ 	FOREIGN KEY (c_id) REFERENCES Customer_Account(c_id)
+	ON DELETE CASCADE ON UPDATE CASCADE,
  	FOREIGN KEY (tid) REFERENCES Purchase(tid)
+	ON DELETE CASCADE ON UPDATE CASCADE
  	);
 
 INSERT INTO Admin VALUES(0);
@@ -275,9 +280,9 @@ INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('
 INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('Corsair','AX1000i',8809,10,'Power Supply',165);
 INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('Corsair','AX1200i',8810,10,'Power Supply',220);
 
-INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (1, 1102, 'Logitech', '01/01/15', 345);
-INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (1, 9805, 'Samsung', '01/01/15', 345);
-INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (1, 1201, 'Logitech', '01/01/15', 345);
+INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (1, 1102, 'Logitech', '01/01/15', 345);
+INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (1, 9805, 'Samsung', '01/01/15', 345);
+INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (1, 1201, 'Logitech', '01/01/15', 345);
 INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Express', 1);
 INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (0, 1);
 
@@ -328,7 +333,7 @@ INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (0, 13);
 INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (14, 3315, 'Gigabyte', '01/10/15', 670);
 INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Express', 14);
 INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (0, 14);
-INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (15, 3317, 'Gigabyte', '01/10/15', 690);
+INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (15, 3316, 'Gigabyte', '01/10/15', 690);
 INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Express', 15);
 INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (5, 15);
 INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (16, 3306, 'EVGA', '01/10/15', 650);
