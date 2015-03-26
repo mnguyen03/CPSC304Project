@@ -92,11 +92,11 @@ table#items tr:nth-child(even) {
 					<option value="3">Monitor</option>
 					<option value="4">Motherboard</option>
 					<option value="5">Mouse</option>
-					<option value="7">Power Supply</option>
-					<option value="8">Processor</option>
-					<option value="9">RAM</option>
-					<option value="10">SSD</option>
-					<option value="11">Video Card</option>
+					<option value="6">Power Supply</option>
+					<option value="7">Processor</option>
+					<option value="8">RAM</option>
+					<option value="9">SSD</option>
+					<option value="10">Video Card</option>
 				</select>
 				<input type="text" name="search" class="search" value=""></input>
 				<table id="attributes" width="70%" cellpadding="5px" border="1px">
@@ -124,8 +124,6 @@ table#items tr:nth-child(even) {
 		<center>
 
 <?php
-   $title = "Search bar input test";
-   echo nl2br($title);
    try{
    if(!$pdo = new PDO('mysql:host=localhost;dbname=computerstoredb',
     'root',
@@ -136,7 +134,6 @@ table#items tr:nth-child(even) {
 	echo nl2br($sad);
     exit;
 	}
-	
 	$yay = "\r\n Hooray, we connected to MySQL \r\n";
 	echo nl2br($yay);
 	}
@@ -144,8 +141,6 @@ table#items tr:nth-child(even) {
 		$error = "\r\nCould not connect: " . $Exception->getMessage( );
 		echo nl2br($error);
 	}
-	echo "You searched for: ";
-	echo $_POST['search'];
 	$sql = "SELECT * FROM supplies_item 
 			WHERE s_name LIKE ? AND 
 			s_type LIKE ? ORDER BY s_type";
@@ -154,8 +149,7 @@ table#items tr:nth-child(even) {
 	if (isset($_POST['prodattribute'])){
 		$checked_count = count($_POST['prodattribute']);
 	}
-	echo "\r\n You have selected ".$checked_count." options \r\n";
-	echo "Item type selected:".$_POST['itemType'];
+	echo "\r\n You have selected ".$checked_count." option(s). \r\n";
 	$item_types = array("%", "Case", "Headset", "Monitor", "Motherboard", "Mouse",
 							"Power Supply", "Processor", "RAM", "SSD", "Video Card");
 	if (strcmp($_POST['search'], "") == 0){
