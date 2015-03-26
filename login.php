@@ -103,8 +103,6 @@ table#items tr:nth-child(even) {
 			</div>
 			<div id="statusbar">
 				<?php
-					$title = "SQL Query Test";
-					echo nl2br($title);
 					try{
 						if(!$pdo = new PDO('mysql:host=localhost;dbname=computerstoredb',
 						'root',
@@ -115,7 +113,7 @@ table#items tr:nth-child(even) {
 					exit;
 					}
 	
-					$yay = "\r\n Hooray, we connected \r\n";
+					$yay = "\r\n Status: connected! \r\n";
 					echo nl2br($yay);
 					}
 					catch (PDOException $Exception){
@@ -150,7 +148,7 @@ table#items tr:nth-child(even) {
 			<div id="login" class="column">
 				<?php
 				
-					$err = $loginerr = "";
+					$err = "";
 					$name = $pass = "";
 
 					if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -182,7 +180,6 @@ table#items tr:nth-child(even) {
 							if ($pass == $row['c_pass']) {
 								session_start();
 								$_SESSION["user"] = $name;
-								echo $_SESSION["user"];
 							} else {
 								echo "Wrong password!";	
 							}
@@ -195,7 +192,6 @@ table#items tr:nth-child(even) {
 						Password: <input type="password" name="password"><br><br>					
 						<input type="submit" name="submit" value="Log In"> <br><br>
 						<span class="error"> <?php echo $err;?></span>
-						<span class="error"> <?php echo $loginerr;?></span>
 					</form>
 				</center>
 			</div>

@@ -122,6 +122,8 @@ table#items tr:nth-child(even) {
 						$error = "\r\nCould not connect: " . $Exception->getMessage( );
 						echo nl2br($error);
 					}
+					
+					session_start();
 				?>
 			</div>
 			<div id="searchbar">
@@ -153,7 +155,6 @@ table#items tr:nth-child(even) {
 				if (empty($_SESSION)) {
 					echo "You are not logged in!";
 				} else {
-					session_start();
 
 					// remove all session variables			
 					session_unset(); 

@@ -30,7 +30,6 @@ a {
 
 #header {
 	background: #384E82;
-	height: 100%;
 	border: 1px solid white;
 }
 
@@ -38,8 +37,23 @@ a {
 	padding-bottom: 15px;
 }
 
+#statusbar {
+	margin-bottom: 15px;
+	color: white;
+	background-color: green;
+}
+
 .search{
-	width: 450px;
+	width: 350px;
+}
+
+input#logoutbtn {
+	border: 0px;
+	color: white;
+	background: #051C50;
+	font-family: "Century Gothic";
+	font-size: 15px;
+	font-variant: small-caps;
 }
 
 h1 {
@@ -48,9 +62,7 @@ h1 {
 	font-weight: bold; 
 	font-variant: small-caps;
 	font-family: Arial Black;
-	line-height: 50px; 
-	padding-top: 2px; 
-	padding-bottom: 5px;
+	line-height: 45px; 
 }
 
 h2 {
@@ -75,14 +87,76 @@ table#items tr:nth-child(even) {
 	color: white;
 }
 
+form {
+	display: inline;
+}
+
 </style>
 	<body>
 	<div id="wrapper">
 	<div id="left" class="column">&nbsp;</div>
 	<div id="middle" class="column">
 		<center>
-			<div id="header"><h1><a class="header" href="computerstore.php">H.T.M.L. Computer Store</a></h1></div>
-			<div id="nav"><h2><a href="login.php">Login</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;My Account&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Shopping Cart</h2></div>
+			<div id="header"><h1><table cellpadding=10px>
+									<tr>
+										<td><a href="computerstore.php">
+												H.<font size=5px>ugo</font><br>
+												T.<font size=5px>revor</font><br>
+												M.<font size=5px>ichelle</font><br>
+												L.<font size=5px>iJye</font><br>
+											</a>
+										</td>
+										<td><a href="computerstore.php">
+												Computer Store
+											</a>
+										</td>
+									</tr>
+								</table>
+							</h1>
+			</div>
+			<div id="nav"><h2><a href="login.php">Login</a> | 
+							  <a href="account.php">My Account</a> |
+							  <a href="shoppingcart.php">Shopping Cart</a> |
+							<form action="logout.php"><input id="logoutbtn" type="submit" value="Log Out"></input></form>
+						  </h2>
+			</div>
+			<div id="statusbar">
+				<?php
+					try{
+						if(!$pdo = new PDO('mysql:host=localhost;dbname=computerstoredb',
+						'root',
+						'admin1')
+						){
+					$sad = "\r\n :( \r\n";
+					echo nl2br($sad);
+					exit;
+					}
+	
+	$yay = "\r\n Status: Connected to Database! \r\n";
+	echo $yay;
+	}
+	catch (PDOException $Exception){
+		$error = "\r\nCould not connect: " . $Exception->getMessage( );
+		echo nl2br($error);
+	}
+	
+	session_start();
+	
+	if (!empty($_SESSION["user"])) {
+		echo "<br />" . "Welcome " . $_SESSION["user"];
+	} else {
+		echo "<br />" . "Currently not logged in.";
+	}
+	
+/* 	$sql = "SELECT c_name FROM customer_account ORDER BY c_name";
+	echo "Customers: <br />";
+	foreach ($pdo->query($sql) as $row) {
+		echo nl2br($row['c_name']);
+		echo "<br />";
+	}
+	 */
+?>
+			</div>
 			<div id="searchbar">
 				<form action="search.php" method="post">
 				<select name="itemType">
@@ -96,6 +170,9 @@ table#items tr:nth-child(even) {
 				</select>	
 				<input type="text" name="search" class="search" value=""></input>
 				<input type="submit" value="Search"/>
+				</form>
+				<form action="advancedsearch.php">
+					<button>Advanced Search</button>
 				</form>
 			</div>
 		</center>
@@ -116,39 +193,6 @@ table#items tr:nth-child(even) {
 					</tbody>
 				</table>
 			</div>
-	
-		<center>
-
-<?php
-   $title = "SQL Query Test";
-   echo nl2br($title);
-   try{
-   if(!$pdo = new PDO('mysql:host=localhost;dbname=computerstoredb',
-    'root',
-    'admin1')
-	){
-	$sad = "\r\n :( \r\n";
-	echo nl2br($sad);
-    exit;
-	}
-	
-	$yay = "\r\n Hooray, we connected \r\n";
-	echo nl2br($yay);
-	}
-	catch (PDOException $Exception){
-		$error = "\r\nCould not connect: " . $Exception->getMessage( );
-		echo nl2br($error);
-	}
-	
-	$sql = "SELECT c_name FROM customer_account ORDER BY c_name";
-	echo "Customers: <br />";
-	foreach ($pdo->query($sql) as $row) {
-		echo nl2br($row['c_name']);
-		echo "<br />";
-	}
-	
-?>
-
 
 	</div></center>
 	<div id="right" class="column">&nbsp;</div>
