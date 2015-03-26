@@ -161,13 +161,17 @@ form {
 				<form action="search.php" method="post">
 				<select name="itemType">
 					<option value="0">Select an item type</option>
-					<option value="1">Test1</option>
-					<option value="2">Test2</option>
-					<option value="3">Test3</option>
-					<option value="4">Test4</option>
-					<option value="5">Test5</option>
-					<option value="6">Test6</option>
-				</select>	
+					<option value="1">Case</option>
+					<option value="2">Headset</option>
+					<option value="3">Monitor</option>
+					<option value="4">Motherboard</option>
+					<option value="5">Mouse</option>
+					<option value="6">Power Supply</option>
+					<option value="7">Processor</option>
+					<option value="8">RAM</option>
+					<option value="9">SSD</option>
+					<option value="10">Video Card</option>
+				</select>
 				<input type="text" name="search" class="search" value=""></input>
 				<input type="submit" value="Search"/>
 				</form>
