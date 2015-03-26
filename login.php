@@ -29,6 +29,13 @@ a {
 	width: 25%;
 }
 
+#statusbar {
+	margin-bottom: 15px;
+	color: white;
+	background-color: green;
+}
+
+
 #header {
 	background: #384E82;
 	height: 100%;
@@ -40,7 +47,8 @@ a {
 }
 
 #login {
-	padding: 30px;
+	padding: 20px;
+	width: 60%;
 }
 
 .search{
@@ -93,6 +101,29 @@ table#items tr:nth-child(even) {
 							  <a href="shoppingcart.php">Shopping Cart</a>
 						  </h2>
 			</div>
+			<div id="statusbar">
+				<?php
+					$title = "SQL Query Test";
+					echo nl2br($title);
+					try{
+						if(!$pdo = new PDO('mysql:host=localhost;dbname=computerstoredb',
+						'root',
+						'admin1')
+						){
+					$sad = "\r\n :( \r\n";
+					echo nl2br($sad);
+					exit;
+					}
+	
+					$yay = "\r\n Hooray, we connected \r\n";
+					echo nl2br($yay);
+					}
+					catch (PDOException $Exception){
+						$error = "\r\nCould not connect: " . $Exception->getMessage( );
+						echo nl2br($error);
+					}
+				?>
+			</div>
 			<div id="searchbar">
 				<input type="text" name="search" class="search" value=""></input>
 				<input type="submit" value="Search"/>
@@ -116,33 +147,61 @@ table#items tr:nth-child(even) {
 					</tbody>
 				</table>
 			</div>
-	
-		<center>
-		
-		<div id="login">
-		<form action="login.php" method="post">
-			Username: 	<input type="text" name="name"><br><br>
-			Password:   <input type="text" name="password"><br><br>
-						<input type="submit">
-		</form>
-		</div>
+			<div id="login" class="column">
+				<?php
+				
+					$err = $loginerr = "";
+					$name = $pass = "";
 
-<?php
+					if ($_SERVER["REQUEST_METHOD"] == "POST") {
+					   if ((empty($_POST["name"])) || (empty($_POST["password"]))) {
+						 $err = "Please enter a username or password!";
+					   } else {
+						 $name = test_input($_POST["name"]);
+						 $pass = test_input($_POST["password"]);
+						 login($name, $pass, $pdo);
+					   }
+					}
 
-
-$username = $_POST["name"];
-$password = $_POST["password"];
-
-if ($username == "" || $password == "") {
-	$error = "Please enter your username and/or password!";
-	echo $error;
-}
-
-
-?>
-
-	</div></center>
+					function test_input($data) {
+					   $data = trim($data);
+					   $data = stripslashes($data);
+					   $data = htmlspecialchars($data);
+					   return $data;
+					}
+					
+					function login($name, $pass, $pdo) {
+						$sql = "SELECT c_pass FROM customer_account WHERE c_name='$name'";
+						$statement = $pdo->prepare($sql);
+						$statement->execute();
+						$rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+						if ($rows == null) {
+							echo "User does not exist!";
+						}
+						foreach($rows as $row) {
+							if ($pass == $row['c_pass']) {
+								session_start();
+								$_SESSION["user"] = $name;
+								echo $_SESSION["user"];
+							} else {
+								echo "Wrong password!";	
+							}
+						}
+					}
+				?>
+				<center><h2>Log In</h2>
+					<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
+						Username: <input type="text" name="name"><br><br>
+						Password: <input type="password" name="password"><br><br>					
+						<input type="submit" name="submit" value="Log In"> <br><br>
+						<span class="error"> <?php echo $err;?></span>
+						<span class="error"> <?php echo $loginerr;?></span>
+					</form>
+				</center>
+			</div>
+	</div>
 	<div id="right" class="column">&nbsp;</div>
+	</div>
 
 </body>
 </html>
