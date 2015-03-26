@@ -85,7 +85,37 @@ table#items tr:nth-child(even) {
 			<div id="nav"><h2><a href="login.php">Login</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;My Account&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Shopping Cart</h2></div>
 			<div id="searchbar">
 				<form action="search.php" method="post">
+				<select name="itemType">
+					<option value="0">Select an item type</option>
+					<option value="1">Case</option>
+					<option value="2">Headset</option>
+					<option value="3">Monitor</option>
+					<option value="4">Motherboard</option>
+					<option value="5">Mouse</option>
+					<option value="7">Power Supply</option>
+					<option value="8">Processor</option>
+					<option value="9">RAM</option>
+					<option value="10">SSD</option>
+					<option value="11">Video Card</option>
+				</select>
 				<input type="text" name="search" class="search" value=""></input>
+				<table id="attributes" width="70%" cellpadding="5px" border="1px">
+				<tr>
+					<td>Select Attributes to Display:</td>
+				</tr>
+				<tr>
+					<td>
+						<input type="checkbox" name="prodattribute[]" value="s_name">Supplier Name</input><br>
+						<input type="checkbox" name="prodattribute[]" value="s_pname">Product Name</input><br>
+						<input type="checkbox" name="prodattribute[]" value="s_pid">Product ID</input>
+					</td>
+					<td>
+						<input type="checkbox" name="prodattribute[]" value="s_stock">Stock</input><br>
+						<input type="checkbox" name="prodattribute[]" value="s_type">Product Type</input><br>
+						<input type="checkbox" name="prodattribute[]" value="s_price">Price</input>
+					</td>
+				</tr>
+				
 				<input type="submit" value="Search"/>
 				<input type="submit" value="Advanced Search"/>
 				</form>
@@ -116,16 +146,104 @@ table#items tr:nth-child(even) {
 	}
 	echo "You searched for: ";
 	echo $_POST['search'];
-	$sql = "SELECT s_name, s_type, s_price FROM supplies_item 
-			WHERE s_name LIKE ? ORDER BY s_type";
+	$sql = "SELECT * FROM supplies_item 
+			WHERE s_name LIKE ? AND 
+			s_type LIKE ? ORDER BY s_type";
 	$statement = $pdo->prepare($sql);
-	$statement->execute(array('%'.$_POST['search'].'%'));
-	$rows = $statement->fetchAll(PDO::FETCH_ASSOC);
-	foreach($rows as $row){
-		echo nl2br("\r\n".' name='.$row['s_name'].' type='.$row['s_type'].' price='.$row['s_price']);
+	$checked_count = 0;
+	if (isset($_POST['prodattribute'])){
+		$checked_count = count($_POST['prodattribute']);
 	}
-	echo "<br />";
+	echo "\r\n You have selected ".$checked_count." options \r\n";
+	echo "Item type selected:".$_POST['itemType'];
+	$item_types = array("%", "Case", "Headset", "Monitor", "Motherboard", "Mouse",
+							"Power Supply", "Processor", "RAM", "SSD", "Video Card");
+	if (strcmp($_POST['search'], "") == 0){
+		$statement->execute(array('%', $item_types[$_POST['itemType']]));
+		$rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+	}
+	else{
+		$statement->execute(array('%'.$_POST['search'].'%', $item_types[$_POST['itemType']]));
+		$rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+	}
 	
+	if (!isset($_POST['prodattribute'])):
+	echo "\r\n No attributes selected to display. Displaying all attributes. \r\n"
+	
+	?>
+	<table>
+			<tr>
+
+				<th>Supplier Name</th>
+				<th>Product Name</th>
+				<th>Product ID</th>
+				<th>Current Stock</th>
+				<th>Product Type</th>
+				<th>Price</th>
+			<tr>
+			<?php foreach($rows as $row): ?>
+			
+			<tr>
+				<td><?php echo $row['s_name']?></td>
+				<td><?php echo $row['s_pname']?></td>
+				<td><?php echo $row['s_pid']?></td>
+				<td><?php echo $row['s_stock']?></td>
+				<td><?php echo $row['s_type']?></td>
+				<td><?php echo $row['s_price']?></td>
+			</tr>
+		<?php endforeach; ?>
+	</table>
+	
+	<?php else: ?>
+		<table>
+			<tr>
+				<?php if (in_array("s_name", $_POST['prodattribute'])): ?>
+				<th>Supplier Name</th>
+				<?php endif; 
+					if (in_array("s_pname", $_POST['prodattribute'])): ?>
+				<th>Product Name</th>
+				<?php endif; 
+					if (in_array("s_pid", $_POST['prodattribute'])): ?>
+				<th>Product ID</th>
+				<?php endif; 
+					if (in_array("s_stock", $_POST['prodattribute'])): ?>
+				<th>Current Stock</th>
+				<?php endif; 
+					if (in_array("s_type", $_POST['prodattribute'])): ?>
+				<th>Product Type</th>
+				<?php endif; 
+					if (in_array("s_price", $_POST['prodattribute'])): ?>
+				<th>Price</th>
+				<?php endif; ?>
+			<tr>
+			<?php foreach($rows as $row): ?>
+			
+			<tr>
+				<?php if (in_array("s_name", $_POST['prodattribute'])): ?>
+				<td><?php echo $row['s_name']?></td>
+				<?php endif;
+					if (in_array("s_pname", $_POST['prodattribute'])): ?>
+				<td><?php echo $row['s_pname']?></td>
+				<?php endif;
+					if (in_array("s_pid", $_POST['prodattribute'])): ?>
+				<td><?php echo $row['s_pid']?></td>
+				<?php endif;
+					if (in_array("s_stock", $_POST['prodattribute'])): ?>
+				<td><?php echo $row['s_stock']?></td>
+				<?php endif;
+					if (in_array("s_type", $_POST['prodattribute'])): ?>
+				<td><?php echo $row['s_type']?></td>
+				<?php endif;
+					if (in_array("s_price", $_POST['prodattribute'])): ?>
+				<td><?php echo $row['s_price']?></td>
+				<?php endif; ?>
+			</tr>
+
+	<?php endforeach; ?>
+		</table>
+	<?php
+	endif;
+	echo "<br />";
 ?>
 
 
