@@ -142,7 +142,7 @@ table#items tr:nth-child(even) {
 		echo nl2br($error);
 	}
 	$sql = "SELECT * FROM supplies_item 
-			WHERE s_name LIKE ? AND 
+			WHERE s_pname LIKE ? AND 
 			s_type LIKE ? ORDER BY s_type";
 	$statement = $pdo->prepare($sql);
 	$checked_count = 0;
