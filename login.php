@@ -5,6 +5,7 @@
 a {
 	color: white;
 	text-decoration: none;
+	padding-right: 10px;
 }
 
 #wrapper .column {
@@ -36,6 +37,10 @@ a {
 
 #searchbar {
 	padding-bottom: 15px;
+}
+
+#login {
+	padding: 30px;
 }
 
 .search{
@@ -75,6 +80,7 @@ table#items tr:nth-child(even) {
 	color: white;
 }
 
+
 </style>
 	<body>
 	<div id="wrapper">
@@ -82,52 +88,58 @@ table#items tr:nth-child(even) {
 	<div id="middle" class="column">
 		<center>
 			<div id="header"><h1><a class="header" href="computerstore.php">H.T.M.L. Computer Store</a></h1></div>
-			<div id="nav"><h2><a href="login.php">Login</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;My Account&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Shopping Cart</h2></div>
+			<div id="nav"><h2><a href="login.php">Login</a> 
+							  <a href="account.php">My Account</a>
+							  <a href="shoppingcart.php">Shopping Cart</a>
+						  </h2>
+			</div>
 			<div id="searchbar">
-				<form action="search.php" method="post">
 				<input type="text" name="search" class="search" value=""></input>
 				<input type="submit" value="Search"/>
 				<input type="submit" value="Advanced Search"/>
-				</form>
 			</div>
 		</center>
+			<div id="navbar" class="column">
+				<table id="items" width="100%" cellpadding="7px">
+					<tbody align="center">
+					<tr><td>Computer Hardware</td></tr>
+					<tr><td>Monitors</td></tr>
+					<tr><td>Keyboards</td></tr>
+					<tr><td>Mice</td></tr>
+					<tr><td>Laptops</td></tr>
+					<tr><td>Desktop PCs</td></tr>
+					<tr><td>Printers</td></tr>
+					<tr><td>Networking</td></tr>
+					<tr><td>Software</td></tr>
+					<tr><td>External Memory</td></tr>
+					<tr><td>Sale</td></tr>
+					</tbody>
+				</table>
+			</div>
+	
 		<center>
+		
+		<div id="login">
+		<form action="login.php" method="post">
+			Username: 	<input type="text" name="name"><br><br>
+			Password:   <input type="text" name="password"><br><br>
+						<input type="submit">
+		</form>
+		</div>
 
 <?php
-   $title = "Search bar input test";
-   echo nl2br($title);
-   try{
-   if(!$pdo = new PDO('mysql:host=localhost;dbname=computerstoredb',
-    'root',
 
-    'admin1')
-	){
-	$sad = "\r\n :( \r\n";
-	echo nl2br($sad);
-    exit;
-	}
-	
-	$yay = "\r\n Hooray, we connected to MySQL \r\n";
-	echo nl2br($yay);
-	}
-	catch (PDOException $Exception){
-		$error = "\r\nCould not connect: " . $Exception->getMessage( );
-		echo nl2br($error);
-	}
-	echo "You searched for: ";
-	echo $_POST['search'];
-	$sql = "SELECT s_name, s_type, s_price FROM supplies_item 
-			WHERE s_name LIKE ? ORDER BY s_type";
-	$statement = $pdo->prepare($sql);
-	$statement->execute(array('%'.$_POST['search'].'%'));
-	$rows = $statement->fetchAll(PDO::FETCH_ASSOC);
-	foreach($rows as $row){
-		echo nl2br("\r\n".' name='.$row['s_name'].' type='.$row['s_type'].' price='.$row['s_price']);
-	}
-	echo "<br />";
-	
+
+$username = $_POST["name"];
+$password = $_POST["password"];
+
+if ($username == "" || $password == "") {
+	$error = "Please enter your username and/or password!";
+	echo $error;
+}
+
+
 ?>
-
 
 	</div></center>
 	<div id="right" class="column">&nbsp;</div>
