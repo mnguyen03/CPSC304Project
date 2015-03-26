@@ -116,7 +116,7 @@ table#items tr:nth-child(even) {
 	}
 	echo "You searched for: ";
 	echo $_POST['search'];
-	$sql = "SELECT s_name, s_type, s_price FROM supplies_item 
+	$sql = "SELECT s_name, s_pname, s_type, s_price FROM supplies_item 
 			WHERE s_name LIKE ? ORDER BY s_type";
 	$statement = $pdo->prepare($sql);
 	$statement->execute(array('%'.$_POST['search'].'%'));
