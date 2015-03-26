@@ -14,96 +14,100 @@ drop table if exists ShippingMethod cascade;
 
 CREATE TABLE Admin(
 	e_id INT NOT NULL,
-	PRIMARY KEY (e_id)
-	);
-	
+ 	PRIMARY KEY (e_id)
+ 	);
+ 
 CREATE TABLE Customer_Account(
-	c_id INT NOT NULL,
-	c_name VARCHAR(20),
-	c_address VARCHAR(20),
-	c_email VARCHAR(20) NOT NULL,
-	c_phone INT NOT NULL,
-	PRIMARY KEY (c_id, c_email, c_phone)
-	);
+ 	c_id INT NOT NULL,
+ 	c_name VARCHAR(20),
+ 	c_address VARCHAR(20),
+ 	c_email VARCHAR(20) NOT NULL,
+ 	c_phone INT NOT NULL,
+ 	PRIMARY KEY (c_id, c_email, c_phone)
+ 	);
 
 CREATE TABLE Supplier(
-	s_name VARCHAR(30) NOT NULL,
-	s_phone_num INT,
-	s_address VARCHAR(30),
-	PRIMARY KEY (s_name)
-	);
+ 	s_name VARCHAR(30) NOT NULL,
+ 	s_phone_num INT,
+ 	s_address VARCHAR(30),
+ 	PRIMARY KEY (s_name)
+ 	);
 
 CREATE TABLE Supplies_Item(
-	s_name VARCHAR(30) NOT NULL,
+ 	s_name VARCHAR(30) NOT NULL,
 	s_pname VARCHAR(30) NOT NULL,
-	s_pid INT NOT NULL,
-	s_stock INT,
-	s_type VARCHAR(30),
-	s_price INT,
-	PRIMARY KEY (s_name, s_pid),
-	FOREIGN KEY (s_name)
-	REFERENCES Supplier(s_name)
-	);
+ 	s_pid INT NOT NULL,
+ 	s_stock INT,
+ 	s_type VARCHAR(30),
+ 	s_price INT,
+ 	PRIMARY KEY (s_name, s_pid),
+ 	FOREIGN KEY (s_name)
+ 	REFERENCES Supplier(s_name)
+ 	);
 
 CREATE TABLE ShoppingCart(
-	total_price INT,
-	qty INT,
-	c_id INT NOT NULL,
-	c_phone INT NOT NULL,
-	c_email VARCHAR(20) NOT NULL,
-	PRIMARY KEY (c_id),
-	CONSTRAINT link_account FOREIGN KEY (c_id, c_email, c_phone)
-	REFERENCES Customer_Account(c_id, c_email, c_phone)
-	ON UPDATE CASCADE ON DELETE CASCADE
-	);
+ 	total_price INT,
+ 	qty INT,
+ 	c_id INT NOT NULL,
+ 	c_phone INT NOT NULL,
+ 	c_email VARCHAR(20) NOT NULL,
+ 	PRIMARY KEY (c_id),
+ 	CONSTRAINT link_account FOREIGN KEY (c_id, c_email, c_phone)
+ 	REFERENCES Customer_Account(c_id, c_email, c_phone)
+ 	ON UPDATE CASCADE ON DELETE CASCADE
+ 	);
 
 CREATE TABLE Purchase(
-	tid INT,
-	date DATE,
-	amount INT,
-	PRIMARY KEY (tid)
-	);
+ 	tid INT,
+	s_pid INT,
+	s_name VARCHAR(30),
+ 	date DATE,
+ 	amount INT,
+ 	PRIMARY KEY (tid, s_pid),
+	CONSTRAINT link_item FOREIGN KEY (s_pid, s_name)
+	REFERENCES Supplies_Item(s_pid, s_name)
+ 	);
 
 CREATE TABLE Purchase_ShippingMethod(
-	type VARCHAR(40),
-	tid INT,
-	PRIMARY KEY (tid),
-	FOREIGN KEY (tid) REFERENCES Purchase(tid)
-	);
+ 	type VARCHAR(40),
+ 	tid INT,
+ 	PRIMARY KEY (tid),
+ 	FOREIGN KEY (tid) REFERENCES Purchase(tid)
+ 	);
 
 CREATE TABLE ShippingMethod(
-	type VARCHAR(40) NOT NULL,
-	cost INT,
-	eta DATE,
-	PRIMARY KEY (type)
-	);
+ 	type VARCHAR(40) NOT NULL,
+ 	cost INT,
+ 	eta DATE,
+ 	PRIMARY KEY (type)
+ 	);
 
 CREATE TABLE Admin_Manages(
-	c_id INT NOT NULL,
-	e_id INT NOT NULL,
-	PRIMARY KEY (c_id, e_id),
-	FOREIGN KEY (c_id) REFERENCES Customer_Account(c_id),
-	FOREIGN KEY (e_id) REFERENCES Admin(e_id)
-	);
+ 	c_id INT NOT NULL,
+ 	e_id INT NOT NULL,
+ 	PRIMARY KEY (c_id, e_id),
+ 	FOREIGN KEY (c_id) REFERENCES Customer_Account(c_id),
+ 	FOREIGN KEY (e_id) REFERENCES Admin(e_id)
+ 	);
 
 CREATE TABLE Admin_Edits(
-	e_id INT NOT NULL,
-	s_name VARCHAR(30) NOT NULL,
-	s_pid INT NOT NULL,
-	PRIMARY KEY (e_id, s_pid, s_name),
-	FOREIGN KEY (e_id) REFERENCES Admin(e_id),
-	CONSTRAINT edit_stock FOREIGN KEY (s_name, s_pid)
-	REFERENCES Supplies_Item(s_name, s_pid)
-	ON UPDATE CASCADE ON DELETE CASCADE
-	);
+ 	e_id INT NOT NULL,
+ 	s_name VARCHAR(30) NOT NULL,
+ 	s_pid INT NOT NULL,
+ 	PRIMARY KEY (e_id, s_pid, s_name),
+ 	FOREIGN KEY (e_id) REFERENCES Admin(e_id),
+ 	CONSTRAINT edit_stock FOREIGN KEY (s_name, s_pid)
+ 	REFERENCES Supplies_Item(s_name, s_pid)
+ 	ON UPDATE CASCADE ON DELETE CASCADE
+ 	);
 
 CREATE TABLE PurchaseHistory_Contains_Purchase(
-	c_id INT NOT NULL,
-	tid INT,
-	PRIMARY KEY (c_id),
-	FOREIGN KEY (c_id) REFERENCES Customer_Account(c_id),
-	FOREIGN KEY (tid) REFERENCES Purchase(tid)
-	);
+ 	c_id INT NOT NULL,
+ 	tid INT,
+ 	PRIMARY KEY (c_id),
+ 	FOREIGN KEY (c_id) REFERENCES Customer_Account(c_id),
+ 	FOREIGN KEY (tid) REFERENCES Purchase(tid)
+ 	);
 
 INSERT INTO Admin VALUES(0);
 INSERT INTO Admin VALUES(1);
@@ -159,9 +163,15 @@ INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('
 INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('AMD','FX 8300',6302,6,'Processor',160);
 INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('AMD','FX 8350',6303,7,'Processor',190);
 
-INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('ASRock','Z97 Extreme Pro 3',4500,13,'Motherboard',170);
-INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('ASRock','Z97 Extreme Pro 4',4501,25,'Motherboard',210);
-INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('ASRock','Z97M Extreme Pro 4',4502,8,'Motherboard', 220);
+INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('ASRock','Z97 Extreme Pro 
+
+3',4500,13,'Motherboard',170);
+INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('ASRock','Z97 Extreme Pro 
+
+4',4501,25,'Motherboard',210);
+INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('ASRock','Z97M Extreme Pro 4',4502,8,'Motherboard', 
+
+220);
 
 INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('Asus','Z97-A',4503,19,'Motherboard',110);
 INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('Asus','Z97-E',4504,22,'Motherboard',150);
@@ -212,7 +222,7 @@ INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('
 
 INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('Logitech','G240',1200,10,'Headset',35);
 INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('Logitech','G430',1201,10,'Headset',50);
-INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('Logitech','G930',11202,10,'Headset',90);
+INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('Logitech','G930',1202,10,'Headset',90);
 
 INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('MSI','Z97 Gaming 3',4506,10,'Motherboard',150);
 INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('MSI','Z97 Gaming 5',4507,10,'Motherboard',180);
@@ -264,3 +274,116 @@ INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('
 INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('Corsair','AX760i',8808,10,'Power Supply',125);
 INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('Corsair','AX1000i',8809,10,'Power Supply',165);
 INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('Corsair','AX1200i',8810,10,'Power Supply',220);
+
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (1, 1102, 'Logitech', '01/01/15', 345);
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (1, 9805, 'Samsung', '01/01/15', 345);
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (1, 1201, 'Logitech', '01/01/15', 345);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Express', 1);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (0, 1);
+
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (2, 2204, 'Samsung', '01/01/15', 2230);
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (2, 6309, 'Intel', '01/01/15', 2230);
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (2, 3307, 'EVGA', '01/01/15', 2230);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Express', 2);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (2, 2);
+
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (3, 8804, 'Corsair', '01/02/15', 85);
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (3, 7706, 'Corsair', '01/02/15', 85);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Regular', 3);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (4, 3);
+
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (4, 9990, 'Corsair', '01/03/15', 80);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Regular', 4);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (6, 4);
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (5, 9991, 'Corsair', '01/03/15', 90);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Regular', 5);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (8, 5);
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (6, 9992, 'Corsair', '01/04/15', 100);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Express', 6);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (10, 6);
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (7, 9993, 'Corsair', '01/05/15', 150);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Regular', 7);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (12, 7);
+
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (8, 4506, 'MSI', '01/06/15', 150);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Express', 8);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (14, 8);
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (9, 5503, 'MSI', '01/06/15', 190);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Express', 9);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (16, 9);
+
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (10, 7701, 'Samsung', '01/07/15', 100);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Regular', 10);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (17, 10);
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (11, 7707, 'Corsair', '01/08/15', 100);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Regular', 11);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (17, 11);
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (12, 7703, 'Samsung', '01/07/15', 180);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Regular', 12);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (17, 12);
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (13, 7710, 'Corsair', '01/08/15', 220);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Express', 13);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (0, 13);
+
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (14, 3315, 'Gigabyte', '01/10/15', 670);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Express', 14);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (0, 14);
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (15, 3317, 'Gigabyte', '01/10/15', 690);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Express', 15);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (5, 15);
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (16, 3306, 'EVGA', '01/10/15', 650);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Express', 16);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (20, 16);
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (17, 3301, 'Asus', '01/10/15', 420);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Express', 17);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (20, 17);
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (18, 3302, 'Asus', '01/10/15', 440);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Regular', 18);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (2, 18);
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (19, 3304, 'EVGA', '01/10/15', 390);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Regular', 19);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (6, 19);
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (20, 3305, 'EVGA', '01/10/15', 410);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Express', 20);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (19, 20);
+
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (21, 6301, 'AMD', '01/11/15', 110);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Express', 21);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (23, 21);
+INSERT INTO Purchase (tid, s_pid, date, amount) VALUES (22, 6306, 'Intel', '01/12/15', 240);
+INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Regular', 22);
+INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (25, 22);
+
+INSERT INTO ShippingMethod (type, cost, eta) VALUES ('Regular', 10, '5 days');
+INSERT INTO ShippingMethod (type, cost, eta) VALUES ('Express', 25, '2 days');
+
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (0, 9);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (1, 9);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (2, 9);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (3, 8);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (4, 8);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (5, 8);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (6, 7);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (7, 7);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (8, 6);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (9, 6);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (10, 5);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (11, 5);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (12, 5);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (13, 5);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (14, 5);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (15, 5);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (16, 5);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (17, 5);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (18, 5);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (19, 5);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (20, 4);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (21, 4);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (22, 3);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (23, 2);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (24, 1);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (25, 0);
+
+INSERT INTO Admin_Edits (e_id, s_name, s_pid) VALUES (0, 'Asus', 4503);
+INSERT INTO Admin_Edits (e_id, s_name, s_pid) VALUES (1, 'Corsair', 8810);
+INSERT INTO Admin_Edits (e_id, s_name, s_pid) VALUES (9, 'ASRock', 4500);
