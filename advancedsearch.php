@@ -125,6 +125,7 @@ form {
 			</div>
 			
 		<div id ="search">
+		<form action="advancedsearch.php" method="post">
 		<center>	
 			<table id="advsearch" width="70%" cellpadding="5px" border="1px">
 				<tr>
@@ -133,13 +134,13 @@ form {
 					<td><center>Price</center></td>
 				</tr>
 				<tr>
-					<td><input type="checkbox" name="prodtype" value="Processor">Processors</input><br>
-						<input type="checkbox" name="prodtype" value="Motherboard">Motherboards</input><br>
-						<input type="checkbox" name="prodtype" value="Video Card">Video Cards</input><br>
-						<input type="checkbox" name="prodtype" value="Power Supply">Power Supplies</input><br>
-						<input type="checkbox" name="prodtype" value="SSD">SSD</input><br>
-						<input type="checkbox" name="prodtype" value="Mouse">Mice</input><br>
-						<input type="checkbox" name="prodtype" value="Headset">Headsets</input><br><br>
+					<td><input type="checkbox" name="type[]" value="Processor">Processors</input><br>
+						<input type="checkbox" name="type[]" value="Motherboard">Motherboards</input><br>
+						<input type="checkbox" name="type[]" value="Video Card">Video Cards</input><br>
+						<input type="checkbox" name="type[]" value="Power Supply">Power Supplies</input><br>
+						<input type="checkbox" name="type[]" value="SSD">SSD</input><br>
+						<input type="checkbox" name="type[]" value="Mouse">Mice</input><br>
+						<input type="checkbox" name="type[]" value="Headset">Headsets</input><br><br>
 					</td>
 					<td>
 						<input type="checkbox" name="manu" value="AMD">AMD</input><br>
@@ -152,11 +153,10 @@ form {
 						<input type="checkbox" name="manu" value="MSI">MSI</input><br>
 					</td>
 					<td>
-						<input type="checkbox" name="price" value="50">$0 to $50</input><br>
-						<input type="checkbox" name="price" value="100">Up to $100</input><br>
-						<input type="checkbox" name="price" value="200">Up to $200</input><br>
-						<input type="checkbox" name="price" value="300">Up to $300</input><br>
-						<input type="checkbox" name="price" value="1000">All Prices</input><br><br><br>
+						<input type="radio" name="price" value="AVG">Average Price</input><br>
+						<input type="radio" name="price" value="MAX">MAX</input><br>
+						<input type="radio" name="price" value="MIN">MIN</input><br>
+						<input type="radio" name="price" value="COUNT">Number of Products</input><br>
 					</td>
 				<tr>
 					<td colspan="3"><center>
@@ -168,6 +168,79 @@ form {
 			</table>
 		</center>
 		</div>
+		<?php	
+			if(!empty($_POST['type'])){
+				foreach($_POST['type'] as $selected){
+					if(isset($_POST['price']) && $_POST['price'] == 'AVG') {
+						$sql = "SELECT s_name, s_type, AVG(s_price) FROM supplies_item
+								WHERE s_type LIKE ? GROUP BY s_name";
+						$statement = $pdo->prepare($sql);
+						$statement->execute(array('%'.$selected.'%'));
+						$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	
+						foreach($rows as $row){
+							echo nl2br("\r\n".' '.$row['s_name'].' '.$row['s_type'].', Avg Price: $'.$row['AVG(s_price)']);
+						}
+					}
+					if(isset($_POST['price']) && $_POST['price'] == 'MAX') {
+						$sql = "SELECT s_name, s_type, MAX(s_price) FROM supplies_item
+								WHERE s_type LIKE ? GROUP BY s_name";
+						$statement = $pdo->prepare($sql);
+						$statement->execute(array('%'.$selected.'%'));
+						$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	
+						foreach($rows as $row){
+							echo nl2br("\r\n".' '.$row['s_name'].' '.$row['s_type'].', Max Price: $'.$row['MAX(s_price)']);
+						}
+					}
+					if(isset($_POST['price']) && $_POST['price'] == 'MIN') {
+						$sql = "SELECT s_name, s_type, MIN(s_price) FROM supplies_item
+								WHERE s_type LIKE ? GROUP BY s_name";
+						$statement = $pdo->prepare($sql);
+						$statement->execute(array('%'.$selected.'%'));
+						$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	
+						foreach($rows as $row){
+							echo nl2br("\r\n".' '.$row['s_name'].' '.$row['s_type'].', Min Price: $'.$row['MIN(s_price)']);
+						}
+					}
+					if(isset($_POST['price']) && $_POST['price'] == 'COUNT') {
+						$sql = "SELECT s_name, s_pname, s_type, COUNT(s_pname) FROM supplies_item
+								WHERE s_type LIKE ?";
+						$statement = $pdo->prepare($sql);
+						$statement->execute(array('%'.$selected.'%'));
+						$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	
+						foreach($rows as $row){
+							echo nl2br("\r\n".' '.$row['s_type'].', Count: '.$row['COUNT(s_pname)']);
+						}
+					}
+				}
+				echo "<br />";
+			}
+			/*
+			if (isset($_POST['type']) && $_POST['type'] == 'Processor'){
+				$sql = "SELECT s_name, s_pname, s_type, s_price FROM supplies_item
+						WHERE s_type LIKE 'Processor' ORDER BY s_name";
+				$statement = $pdo->prepare($sql);
+				$statement->execute(array('%'.$_POST['type'].'%'));
+				$rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+				foreach($rows as $row){
+					echo nl2br("\r\n".' '.$row['s_name'].' '.$row['s_pname'].' '.$row['s_type'].', Price: $'.$row['s_price']);
+				}
+				echo "<br />";
+			}
+			*/
+			/*
+			$types = $_POST['type'];
+			if(empty($types)){
+				echo "No Product Type selected.";
+			} else {
+				$N = count($types);
+				for($i=0; $i<$N; $i++){
+				}
+			}
+			*/		
+			
+			
+		?>
+	
 		
 		<div id="right" class="column">&nbsp;</div>
 </body>
