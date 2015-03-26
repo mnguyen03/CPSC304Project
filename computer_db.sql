@@ -21,6 +21,7 @@ CREATE TABLE Customer_Account(
  	c_address VARCHAR(20),
  	c_email VARCHAR(20) NOT NULL,
  	c_phone INT NOT NULL,
+	c_pass VARCHAR(20),
  	PRIMARY KEY (c_id, c_email, c_phone)
  	);
 
@@ -125,32 +126,32 @@ INSERT INTO Admin VALUES(7);
 INSERT INTO Admin VALUES(8);
 INSERT INTO Admin VALUES(9);
 
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(0,'Adrian','Unit 1','adrian@gmail.com',5550001);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(1,'Brandon','Unit 2','brandon@gmail.com',5550002);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(2,'Charlie','Unit 3','charlie@gmail.com',5550003);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(3,'David','Unit 4','david@gmail.com',5550004);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(4,'Emily','Unit 5','emily@gmail.com',5550005);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(5,'Frank','Unit 6','frank@gmail.com',5550006);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(6,'George','Unit 7','george@gmail.com',5550007);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(7,'Hugo','Unit 8','hugo@gmail.com',5550008);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(8,'Ivan','Unit 9','ivan@gmail.com',5550009);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(9,'Jason','Unit 10','jason@gmail.com',5550010);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(10,'Karen','Unit 11','karen@gmail.com',5550011);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(11,'Lily','Unit 12','lily@gmail.com',5550012);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(12,'Mark','Unit 13','mark@gmail.com',5550013);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(13,'Nathan','Unit 14','nathan@gmail.com',5550014);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(14,'Otis','Unit 15','otis@gmail.com',5550015);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(15,'Peony','Unit 16','peony@gmail.com',5550016);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(16,'Queenie','Unit 17','queenie@gmail.com',5550017);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(17,'Roger','Unit 18','roger@gmail.com',5550018);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(18,'Steve','Unit 19','steve@gmail.com',5550019);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(19,'Tom','Unit 20','tom@gmail.com',5550020);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(20,'Uber','Unit 21','uber@gmail.com',5550021);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(21,'Vanessa','Unit 22','vanessa@gmail.com',5550022);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(22,'Walter','Unit 23','walter@gmail.com',5550023);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(23,'Xavier','Unit 24','xavier@gmail.com',5550024);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(24,'Yoona','Unit 25','yoona@gmail.com',5550025);
-INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone) VALUES(25,'Zayne','Unit 26','zayne@gmail.com',5550026);
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(0,'Adrian','Unit 1','adrian@gmail.com',5550001,'aaa');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(1,'Brandon','Unit 2','brandon@gmail.com',5550002,'bbb');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(2,'Charlie','Unit 3','charlie@gmail.com',5550003,'ccc');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(3,'David','Unit 4','david@gmail.com',5550004,'ddd');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(4,'Emily','Unit 5','emily@gmail.com',5550005,'eee');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(5,'Frank','Unit 6','frank@gmail.com',5550006,'fff');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(6,'George','Unit 7','george@gmail.com',5550007,'ggg');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(7,'Hugo','Unit 8','hugo@gmail.com',5550008,'hhh');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(8,'Ivan','Unit 9','ivan@gmail.com',5550009,'iii');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(9,'Jason','Unit 10','jason@gmail.com',5550010,'jjj');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(10,'Karen','Unit 11','karen@gmail.com',5550011,'kkk');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(11,'Lily','Unit 12','lily@gmail.com',5550012,'lll');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(12,'Mark','Unit 13','mark@gmail.com',5550013,'mmm');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(13,'Nathan','Unit 14','nathan@gmail.com',5550014,'nnn');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(14,'Otis','Unit 15','otis@gmail.com',5550015,'ooo');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(15,'Peony','Unit 16','peony@gmail.com',5550016,'ppp');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(16,'Queenie','Unit 17','queenie@gmail.com',5550017,'qqq');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(17,'Roger','Unit 18','roger@gmail.com',5550018,'rrr');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(18,'Steve','Unit 19','steve@gmail.com',5550019,'sss');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(19,'Tom','Unit 20','tom@gmail.com',5550020,'ttt');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(20,'Uber','Unit 21','uber@gmail.com',5550021,'uuu');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(21,'Vanessa','Unit 22','vanessa@gmail.com',5550022,'vvv');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(22,'Walter','Unit 23','walter@gmail.com',5550023,'www');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(23,'Xavier','Unit 24','xavier@gmail.com',5550024,'xxx');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(24,'Yoona','Unit 25','yoona@gmail.com',5550025,'yyy');
+INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(25,'Zayne','Unit 26','zayne@gmail.com',5550026,'zzz');
 
 INSERT INTO Supplier (s_name,s_phone_num,s_address) VALUES('AMD',1690001,'Warehouse 1');
 INSERT INTO Supplier (s_name,s_phone_num,s_address) VALUES('ASRock',1690002,'Warehouse 2');
