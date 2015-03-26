@@ -280,20 +280,20 @@ INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('
 INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('Corsair','AX1000i',8809,10,'Power Supply',165);
 INSERT INTO Supplies_Item (s_name,s_pname,s_pid,s_stock,s_type,s_price) VALUES('Corsair','AX1200i',8810,10,'Power Supply',220);
 
-INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (1, 1102, 'Logitech', '01/01/15', 345);
-INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (1, 9805, 'Samsung', '01/01/15', 345);
-INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (1, 1201, 'Logitech', '01/01/15', 345);
+INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (1, 1102, 'Logitech', '01/01/15', 55);
+INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (1, 9805, 'Samsung', '01/01/15', 240);
+INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (1, 1201, 'Logitech', '01/01/15', 50);
 INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Express', 1);
 INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (0, 1);
 
-INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (2, 2204, 'Samsung', '01/01/15', 2230);
-INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (2, 6309, 'Intel', '01/01/15', 2230);
-INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (2, 3307, 'EVGA', '01/01/15', 2230);
+INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (2, 2204, 'Samsung', '01/01/15', 550);
+INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (2, 6309, 'Intel', '01/01/15', 380);
+INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (2, 3307, 'EVGA', '01/01/15', 1300);
 INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Express', 2);
 INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (2, 2);
 
-INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (3, 8804, 'Corsair', '01/02/15', 85);
-INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (3, 7706, 'Corsair', '01/02/15', 85);
+INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (3, 8804, 'Corsair', '01/02/15', 35);
+INSERT INTO Purchase (tid, s_pid, s_name, date, amount) VALUES (3, 7706, 'Corsair', '01/02/15', 50);
 INSERT INTO Purchase_ShippingMethod (type, tid) VALUES ('Regular', 3);
 INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (4, 3);
 
