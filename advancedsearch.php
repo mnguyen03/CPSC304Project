@@ -34,8 +34,8 @@ a {
 	border: 1px solid white;
 }
 
-#searchbar {
-	padding-bottom: 15px;
+#search {
+	width: 100%;
 }
 
 #statusbar {
@@ -69,14 +69,15 @@ h2 {
 	padding: 5px;
 }
 
-table#items {
+table#advsearch {
 	padding: 15px;
 	font-family: Verdana;
 	align: middle;
 	font-size: 15px;
+	border-collapse: collapse;
 }
 
-table#items tr:nth-child(even) {
+table#advsearch tr:nth-child(even) {
 	background: #384E82;
 	color: white;
 }
@@ -91,8 +92,14 @@ form {
 	<div id="left" class="column">&nbsp;</div>
 	<div id="middle" class="column">
 		<center>
-			<div id="header"><h1><a class="header" href="computerstore.php">H.T.M.L. Computer Store</a></h1></div>
-			<div id="nav"><h2><a href="login.php">Login</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;My Account&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Shopping Cart</h2></div>
+			<div id="header">
+				<h1><a class="header" href="computerstore.php">H.T.M.L. Computer Store</a></h1>
+			</div>
+			
+			<div id="nav">
+				<h2><a href="login.php">Login</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;My Account&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Shopping Cart</h2>
+			</div>
+			
 			<div id="statusbar">
 				<?php
 					$title = "SQL Query Test";
@@ -107,67 +114,61 @@ form {
 					exit;
 					}
 	
-	$yay = "\r\n Hooray, we connected \r\n";
-	echo nl2br($yay);
-	}
-	catch (PDOException $Exception){
-		$error = "\r\nCould not connect: " . $Exception->getMessage( );
-		echo nl2br($error);
-	}
-	
-/* 	$sql = "SELECT c_name FROM customer_account ORDER BY c_name";
-	echo "Customers: <br />";
-	foreach ($pdo->query($sql) as $row) {
-		echo nl2br($row['c_name']);
-		echo "<br />";
-	}
-	 */
-?>		
+					$yay = "\r\n Hooray, we connected \r\n";
+					echo nl2br($yay);
+					}
+					catch (PDOException $Exception){
+						$error = "\r\nCould not connect: " . $Exception->getMessage( );
+						echo nl2br($error);
+					}
+				?>		
 			</div>
-
+			
+		<div id ="search">
 		<center>	
-		<table id="advsearch" width="50%" cellpadding="5px" border="1px">
-			<tr>
-				<td><center>Product Type</center></td>
-				<td><center>Manufacturer</center></td>
-				<td><center>Price</center></td>
-			</tr>
-			<tr>
-				<td><input type="checkbox" name="prodtype" value="Processor">Processors</input><br>
-					<input type="checkbox" name="prodtype" value="Motherboard">Motherboards</input><br>
-					<input type="checkbox" name="prodtype" value="Video Card">Video Cards</input><br>
-					<input type="checkbox" name="prodtype" value="Power Supply">Power Supplies</input><br>
-					<input type="checkbox" name="prodtype" value="SSD">SSD</input><br>
-					<input type="checkbox" name="prodtype" value="Mouse">Mice</input><br>
-					<input type="checkbox" name="prodtype" value="Headset">Headsets</input><br><br>
-				</td>
-				<td>
-					<input type="checkbox" name="manu" value="AMD">AMD</input><br>
-					<input type="checkbox" name="manu" value="ASRock">ASRock</input><br>
-					<input type="checkbox" name="manu" value="Asus">Asus</input><br>
-					<input type="checkbox" name="manu" value="EVGA">EVGA</input><br>
-					<input type="checkbox" name="manu" value="Gigabyte">Gigabyte</input><br>
-					<input type="checkbox" name="manu" value="Intel">Intel</input><br>
-					<input type="checkbox" name="manu" value="Logitech">Logitech</input><br>
-					<input type="checkbox" name="manu" value="MSI">MSI</input><br>
-				</td>
-				<td>
-					<input type="checkbox" name="price" value="50">$0 to $50</input><br>
-					<input type="checkbox" name="price" value="100">Up to $100</input><br>
-					<input type="checkbox" name="price" value="200">Up to $200</input><br>
-					<input type="checkbox" name="price" value="300">Up to $300</input><br>
-					<input type="checkbox" name="price" value="1000">All Prices</input><br><br><br>
-				</td>
-			<tr>
-				<td colspan="3"><center>
-					<input type="search" name="search" class="search"></input>
-					<input type="submit"></input>
-					</center>
-				</td>
-			<tr>
-			</center>
-
-	</div></center>
-	<div id="right" class="column">&nbsp;</div>
+			<table id="advsearch" width="70%" cellpadding="5px" border="1px">
+				<tr>
+					<td><center>Product Type</center></td>
+					<td><center>Manufacturer</center></td>
+					<td><center>Price</center></td>
+				</tr>
+				<tr>
+					<td><input type="checkbox" name="prodtype" value="Processor">Processors</input><br>
+						<input type="checkbox" name="prodtype" value="Motherboard">Motherboards</input><br>
+						<input type="checkbox" name="prodtype" value="Video Card">Video Cards</input><br>
+						<input type="checkbox" name="prodtype" value="Power Supply">Power Supplies</input><br>
+						<input type="checkbox" name="prodtype" value="SSD">SSD</input><br>
+						<input type="checkbox" name="prodtype" value="Mouse">Mice</input><br>
+						<input type="checkbox" name="prodtype" value="Headset">Headsets</input><br><br>
+					</td>
+					<td>
+						<input type="checkbox" name="manu" value="AMD">AMD</input><br>
+						<input type="checkbox" name="manu" value="ASRock">ASRock</input><br>
+						<input type="checkbox" name="manu" value="Asus">Asus</input><br>
+						<input type="checkbox" name="manu" value="EVGA">EVGA</input><br>
+						<input type="checkbox" name="manu" value="Gigabyte">Gigabyte</input><br>
+						<input type="checkbox" name="manu" value="Intel">Intel</input><br>
+						<input type="checkbox" name="manu" value="Logitech">Logitech</input><br>
+						<input type="checkbox" name="manu" value="MSI">MSI</input><br>
+					</td>
+					<td>
+						<input type="checkbox" name="price" value="50">$0 to $50</input><br>
+						<input type="checkbox" name="price" value="100">Up to $100</input><br>
+						<input type="checkbox" name="price" value="200">Up to $200</input><br>
+						<input type="checkbox" name="price" value="300">Up to $300</input><br>
+						<input type="checkbox" name="price" value="1000">All Prices</input><br><br><br>
+					</td>
+				<tr>
+					<td colspan="3"><center>
+						<input type="search" name="search" class="search"></input>
+						<input type="submit"></input>
+						</center>
+					</td>
+				<tr>
+			</table>
+		</center>
+		</div>
+		
+		<div id="right" class="column">&nbsp;</div>
 </body>
 </html>
