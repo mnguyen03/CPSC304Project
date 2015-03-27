@@ -161,7 +161,7 @@ form {
 			</table>
 		</center>
 		</div>
-		<?php		
+		<?php
 			if(!empty($_POST['type'])){
 				foreach($_POST['type'] as $selected){
 					if(isset($_POST['group']) && $_POST['group'] == 1){
