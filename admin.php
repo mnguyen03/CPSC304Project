@@ -43,6 +43,10 @@ a {
 	background-color: green;
 }
 
+#display {
+	width: 74%;
+}
+
 .search{
 	width: 350px;
 }
@@ -54,6 +58,13 @@ input#logoutbtn {
 	font-family: "Century Gothic";
 	font-size: 15px;
 	font-variant: small-caps;
+}
+
+input#evenbtn {
+	border: 0px;
+	background: white;
+	font-family: Verdana;
+	font-size: 15px;
 }
 
 h1 {
@@ -97,13 +108,27 @@ form {
 	<div id="left" class="column">&nbsp;</div>
 	<div id="middle" class="column">
 		<center>
-			<a href="computerstore.php">
-				<IMG SRC="304Matrix.jpg" alt="Make sure you put 304Matrix.jpg in the correct folder" width = "640" height="360"/>
-			</a>
+			<div id="header"><h1><table cellpadding=10px>
+									<tr>
+										<td><a href="computerstore.php">
+												H.<font size=5px>ugo</font><br>
+												T.<font size=5px>revor</font><br>
+												M.<font size=5px>ichelle</font><br>
+												L.<font size=5px>iJye</font><br>
+											</a>
+										</td>
+										<td><a href="computerstore.php">
+												Computer Store
+											</a>
+										</td>
+									</tr>
+								</table>
+							</h1>
+			</div>
 			<div id="nav"><h2><a href="login.php">Login</a> | 
 							  <a href="account.php">My Account</a> |
 							  <a href="shoppingcart.php">Shopping Cart</a> |
-							  <a href="admin.php">Admin</a> |							  
+							  <a href="admin.php">Admin</a> |
 							<form action="logout.php"><input id="logoutbtn" type="submit" value="Log Out"></input></form>
 						  </h2>
 			</div>
@@ -148,18 +173,14 @@ form {
 				<form action="search.php" method="post">
 				<select name="itemType">
 					<option value="0">Select an item type</option>
-					<option value="1">Case</option>
-					<option value="2">Headset</option>
-					<option value="3">Monitor</option>
-					<option value="4">Motherboard</option>
-					<option value="5">Mouse</option>
-					<option value="6">Power Supply</option>
-					<option value="7">Processor</option>
-					<option value="8">RAM</option>
-					<option value="9">SSD</option>
-					<option value="10">Video Card</option>
-				</select>
-				<input type="text" name="search" class="search" value="" placeholder="Search for Product Name..."></input>
+					<option value="1">Test1</option>
+					<option value="2">Test2</option>
+					<option value="3">Test3</option>
+					<option value="4">Test4</option>
+					<option value="5">Test5</option>
+					<option value="6">Test6</option>
+				</select>	
+				<input type="text" name="search" class="search" value=""></input>
 				<input type="submit" value="Search"/>
 				</form>
 				<form action="advancedsearch.php">
@@ -170,22 +191,49 @@ form {
 			<div id="navbar" class="column">
 				<table id="items" width="100%" cellpadding="7px">
 					<tbody align="center">
-					<tr><td>Computer Hardware</td></tr>
-					<tr><td>Monitors</td></tr>
-					<tr><td>Keyboards</td></tr>
-					<tr><td>Mice</td></tr>
-					<tr><td>Laptops</td></tr>
-					<tr><td>Desktop PCs</td></tr>
-					<tr><td>Printers</td></tr>
-					<tr><td>Networking</td></tr>
-					<tr><td>Software</td></tr>
-					<tr><td>External Memory</td></tr>
+					<tr>
+						<td>
+							<form name="acc_search" method="POST" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+							<input id="evenbtn" type="submit" name="c_accs_button" value="Customer Accounts">
+							</form>
+						</td>
+					</tr>
+					<tr><td>Customer Orders</td></tr>
+					<tr><td>Suppliers</td></tr>
+					<tr><td>Stock</td></tr>
 					<tr><td>Sale</td></tr>
 					</tbody>
 				</table>
 			</div>
-
-	</div></center>
+			<div id="display" class="column">
+			 <?php
+				if ($_POST) {
+					$sql = "SELECT c_id, c_name, c_email, c_phone FROM customer_account";
+					$statement = $pdo->prepare($sql);
+					$statement->execute();
+					$rows = $statement->fetchALL(PDO::FETCH_ASSOC); 
+					}
+			 ?>
+			 
+			<?php if (!empty($rows)) { ?>
+					<table width="100%" border="1px">
+						<tr>
+							<th>Customer ID</th>
+							<th>Customer Name</th>
+							<th>Email</th>
+							<th>Phone</th>
+						<tr>
+				<?php	foreach($rows as $row): ?>
+						<tr><center>
+							<td><?php echo $row['c_id']?></td>
+							<td><?php echo $row['c_name']?></td>
+							<td><?php echo $row['c_email']?></td>
+							<td><?php echo $row['c_phone']?></td>
+						</tr>
+			<?php endforeach; }?>
+					</table>
+			</div>
+	</div>
 	<div id="right" class="column">&nbsp;</div>
 
 </body>
