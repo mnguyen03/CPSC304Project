@@ -130,7 +130,7 @@ form {
 			<table id="advsearch" width="70%" cellpadding="5px" border="1px">
 				<tr>
 					<td><center>Product Type</center></td>
-					<td><center>Grouping</center></td>
+					<td><center>Display</center></td>
 					<td><center>Details</center></td>
 				</tr>
 				<tr>
@@ -143,8 +143,9 @@ form {
 						<input type="checkbox" name="type[]" value="Headset">Headsets</input><br><br>
 					</td>
 					<td>
-						<input type="radio" name="group" value="1">Group By Supplier</input><br>
-						<input type="radio" name="group" value="2">Group By Total Amount</input><br>
+						<input type="radio" name="group" value="1">Show Each Supplier</input><br>
+						<input type="radio" name="group" value="2">Show Maximum Of</input><br>
+						<input type="radio" name="group" value="3">Show Minimum Of</input><br>
 					</td>
 					<td>
 						<input type="radio" name="price" value="AVG">Average Price</input><br>
@@ -260,7 +261,7 @@ form {
 						
 					} else if(isset($_POST['group']) && $_POST['group'] == 2){
 						if(isset($_POST['price']) && $_POST['price'] == 'AVG'):
-							$sql = "SELECT s_type, SUM(avg_price)
+							$sql = "SELECT s_type, MAX(avg_price)
 									FROM (SELECT s_name, s_type, AVG(s_price) AS avg_price
 											FROM supplies_item
 											WHERE s_type LIKE ?
@@ -271,20 +272,20 @@ form {
 							<table>
 								<tr>
 									<th>Product Type</th>
-									<th>Sum of Average Prices</th>
+									<th>Max of Average Prices</th>
 								</tr>
 								<?php foreach($rows as $row): ?>
 			
 								<tr>
 									<td><?php echo $row['s_type']?></td>
-									<td><?php echo $row['SUM(avg_price)']?></td>
+									<td><?php echo $row['MAX(avg_price)']?></td>
 								</tr>
 								<?php endforeach; ?>
 							</table>
 						<?php endif;
 
 						if(isset($_POST['price']) && $_POST['price'] == 'MAX'):
-							$sql = "SELECT s_type, SUM(max_price)
+							$sql = "SELECT s_type, MAX(max_price)
 									FROM (SELECT s_name, s_type, MAX(s_price) AS max_price
 											FROM supplies_item
 											WHERE s_type LIKE ?
@@ -294,21 +295,21 @@ form {
 							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	?>
 							<table>
 								<tr>
-									<th>Supplier Name</th>
-									<th>Sum of Highest Prices</th>
+									<th>Product Type</th>
+									<th>Max of Highest Prices</th>
 								</tr>
 								<?php foreach($rows as $row): ?>
 			
 								<tr>
 									<td><?php echo $row['s_type']?></td>
-									<td><?php echo $row['SUM(max_price)']?></td>
+									<td><?php echo $row['MAX(max_price)']?></td>
 								</tr>
 								<?php endforeach; ?>
 							</table>
 						<?php endif;
 						
 						if(isset($_POST['price']) && $_POST['price'] == 'MIN'):
-							$sql = "SELECT s_type, SUM(min_price)
+							$sql = "SELECT s_type, MAX(min_price)
 									FROM (SELECT s_name, s_type, MIN(s_price) AS min_price
 											FROM supplies_item
 											WHERE s_type LIKE ?
@@ -319,20 +320,20 @@ form {
 							<table>
 								<tr>
 									<th>Product Type</th>
-									<th>Sum of Lowest Prices</th>
+									<th>Max of Lowest Prices</th>
 								</tr>
 								<?php foreach($rows as $row): ?>
 			
 								<tr>
 									<td><?php echo $row['s_type']?></td>
-									<td><?php echo $row['SUM(min_price)']?></td>
+									<td><?php echo $row['MAX(min_price)']?></td>
 								</tr>
 								<?php endforeach; ?>
 							</table>
 						<?php endif;
 						
 						if(isset($_POST['price']) && $_POST['price'] == 'COUNT'):
-							$sql = "SELECT s_type, SUM(counts)
+							$sql = "SELECT s_type, MAX(counts)
 									FROM (SELECT s_name, s_type, COUNT(s_pname) AS counts
 											FROM supplies_item
 											WHERE s_type LIKE ?
@@ -343,13 +344,109 @@ form {
 							<table>
 								<tr>
 									<th>Product Type</th>
-									<th>Total Quantity</th>
+									<th>Highest Quantity</th>
 								</tr>
 								<?php foreach($rows as $row): ?>
 			
 								<tr>
 									<td><?php echo $row['s_type']?></td>
-									<td><?php echo $row['SUM(counts)']?></td>
+									<td><?php echo $row['MAX(counts)']?></td>
+								</tr>
+								<?php endforeach; ?>
+							</table>
+						<?php endif;
+					} else if(isset($_POST['group']) && $_POST['group'] == 3){
+						if(isset($_POST['price']) && $_POST['price'] == 'AVG'):
+							$sql = "SELECT s_type, MIN(avg_price)
+									FROM (SELECT s_name, s_type, AVG(s_price) AS avg_price
+											FROM supplies_item
+											WHERE s_type LIKE ?
+											GROUP BY s_name) AS supplies_item";
+							$statement = $pdo->prepare($sql);
+							$statement->execute(array('%'.$selected.'%'));
+							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	?>
+							<table>
+								<tr>
+									<th>Product Type</th>
+									<th>Min of Average Prices</th>
+								</tr>
+								<?php foreach($rows as $row): ?>
+			
+								<tr>
+									<td><?php echo $row['s_type']?></td>
+									<td><?php echo $row['MIN(avg_price)']?></td>
+								</tr>
+								<?php endforeach; ?>
+							</table>
+						<?php endif;
+
+						if(isset($_POST['price']) && $_POST['price'] == 'MAX'):
+							$sql = "SELECT s_type, MIN(max_price)
+									FROM (SELECT s_name, s_type, MAX(s_price) AS max_price
+											FROM supplies_item
+											WHERE s_type LIKE ?
+											GROUP BY s_name) AS supplies_item";
+							$statement = $pdo->prepare($sql);
+							$statement->execute(array('%'.$selected.'%'));
+							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	?>
+							<table>
+								<tr>
+									<th>Product Type</th>
+									<th>Min of Highest Prices</th>
+								</tr>
+								<?php foreach($rows as $row): ?>
+			
+								<tr>
+									<td><?php echo $row['s_type']?></td>
+									<td><?php echo $row['MIN(max_price)']?></td>
+								</tr>
+								<?php endforeach; ?>
+							</table>
+						<?php endif;
+						
+						if(isset($_POST['price']) && $_POST['price'] == 'MIN'):
+							$sql = "SELECT s_type, MIN(min_price)
+									FROM (SELECT s_name, s_type, MIN(s_price) AS min_price
+											FROM supplies_item
+											WHERE s_type LIKE ?
+											GROUP BY s_name) AS supplies_item";
+							$statement = $pdo->prepare($sql);
+							$statement->execute(array('%'.$selected.'%'));
+							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	?>
+							<table>
+								<tr>
+									<th>Product Type</th>
+									<th>Min of Lowest Prices</th>
+								</tr>
+								<?php foreach($rows as $row): ?>
+			
+								<tr>
+									<td><?php echo $row['s_type']?></td>
+									<td><?php echo $row['MIN(min_price)']?></td>
+								</tr>
+								<?php endforeach; ?>
+							</table>
+						<?php endif;
+						
+						if(isset($_POST['price']) && $_POST['price'] == 'COUNT'):
+							$sql = "SELECT s_type, MIN(counts)
+									FROM (SELECT s_name, s_type, COUNT(s_pname) AS counts
+											FROM supplies_item
+											WHERE s_type LIKE ?
+											GROUP BY s_name) AS supplies_item";
+							$statement = $pdo->prepare($sql);
+							$statement->execute(array('%'.$selected.'%'));
+							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	?>
+							<table>
+								<tr>
+									<th>Product Type</th>
+									<th>Lowest Quantity</th>
+								</tr>
+								<?php foreach($rows as $row): ?>
+			
+								<tr>
+									<td><?php echo $row['s_type']?></td>
+									<td><?php echo $row['MIN(counts)']?></td>
 								</tr>
 								<?php endforeach; ?>
 							</table>
