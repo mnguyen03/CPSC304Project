@@ -75,6 +75,14 @@ input#custorders {
 	font-size: 15px;
 }
 
+input#nonorderitems {
+	border: 0px;
+	color: white;
+	background: #384E82;
+	font-family: Verdana;
+	font-size: 15px;
+}
+
 h1 {
 	color: white; 
 	font-size: 50px;
@@ -216,6 +224,13 @@ form {
 					<tr><td>Suppliers</td></tr>
 					<tr><td>Stock</td></tr>
 					<tr><td>Sale</td></tr>
+					<tr>
+						<td>
+							<form name="no_order_items" method="POST" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+							<input id="nonorderitems" type="submit" name="non_order_item_button" value="Items With No Orders">
+							</form>
+						</td>
+					</tr>
 					</tbody>
 				</table>
 			</div>
@@ -229,15 +244,33 @@ form {
 					$rows = $statement->fetchALL(PDO::FETCH_ASSOC); 
 					}
 					elseif (!empty($_POST['c_orders_button'])){
-					$sql = "SELECT customer_account.c_id, customer_account.c_name, purchasehistory_contains_purchase.tid FROM customer_account JOIN purchasehistory_contains_purchase USING (c_id) JOIN purchase USING (tid) ORDER BY customer_account.c_id";
+					$sql = "SELECT customer_account.c_id, customer_account.c_name, purchasehistory_contains_purchase.tid 
+							FROM customer_account JOIN purchasehistory_contains_purchase 
+							USING (c_id) JOIN purchase USING (tid) ORDER BY customer_account.c_id";
 					$statement = $pdo->prepare($sql);
 					$statement->execute();
 					$rows = $statement->fetchALL(PDO::FETCH_ASSOC); 
 					}
-				}	
+					elseif (!empty($_POST['non_order_item_button'])){
+					$sql = "SELECT S.s_name, S.s_pname, S.s_pid
+							FROM Supplies_Item S 
+							WHERE S.s_pid NOT IN
+								((SELECT T.s_pid
+									FROM Purchase P, Supplies_Item T
+									WHERE T.s_pid = P.s_pid))";			
+					
+					$statement = $pdo->prepare($sql);
+					$statement->execute();
+					$rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+					echo "ayy";
+					echo $_POST['non_order_item_button'];
+					}
+				}
 			 ?>
 			 
-			<?php if (!empty($rows)) { 
+			<?php 
+			echo count($rows);
+			if (!empty($rows)) { 
 				if (!empty($_POST['c_accs_button'])){ ?>
 					<table width="100%" border="1px">
 						<tr>
@@ -255,7 +288,6 @@ form {
 						</tr>
 			<?php endforeach;
 				}
-				
 			if (!empty($_POST['c_orders_button'])){ ?>
 					<table width="100%" border="1px">
 						<tr>
@@ -268,6 +300,21 @@ form {
 							<td><?php echo $row['c_id']?></td>
 							<td><?php echo $row['c_name']?></td>
 							<td><?php echo $row['tid']?></td>
+						</tr>
+			<?php endforeach; }
+				
+			if (!empty($_POST['non_order_item_button'])){?>
+					<table width="100%" border="1px">
+						<tr>
+							<th>Supplier Name</th>
+							<th>Product Name</th>
+							<th>PID</th>
+						<tr>
+				<?php	foreach($rows as $row): ?>
+						<tr><center>
+							<td><?php echo $row['s_name']?></td>
+							<td><?php echo $row['s_pname']?></td>
+							<td><?php echo $row['s_pid']?></td>
 						</tr>
 			<?php endforeach; }
 			}?>
