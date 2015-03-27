@@ -149,7 +149,7 @@ form {
 						<input type="radio" name="price" value="AVG">Average Price</input><br>
 						<input type="radio" name="price" value="MAX">MAX</input><br>
 						<input type="radio" name="price" value="MIN">MIN</input><br>
-						<input type="radio" name="price" value="COUNT">Number of Products</input><br>
+						<input type="radio" name="price" value="COUNT" required>Number of Products</input><br>
 					</td>
 				<tr>
 					<td colspan="3"><center>
@@ -165,87 +165,182 @@ form {
 			if(!empty($_POST['type'])){
 				foreach($_POST['type'] as $selected){
 					if(isset($_POST['group']) && $_POST['group'] == 1){
-						if(isset($_POST['price']) && $_POST['price'] == 'AVG') {
+						if(isset($_POST['price']) && $_POST['price'] == 'AVG'):
 							$sql = "SELECT s_name, s_type, AVG(s_price) FROM supplies_item
 									WHERE s_type LIKE ? GROUP BY s_name";
 							$statement = $pdo->prepare($sql);
 							$statement->execute(array('%'.$selected.'%'));
-							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	
-							foreach($rows as $row){
-								echo nl2br("\r\n".' '.$row['s_name'].' '.$row['s_type'].', Avg Price: $'.$row['AVG(s_price)']);
-							}
-						}
-						if(isset($_POST['price']) && $_POST['price'] == 'MAX') {
+							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	?>
+							<table>
+								<tr>
+									<th>Supplier Name</th>
+									<th>Product Type</th>
+									<th>Average Price</th>
+								</tr>
+								<?php foreach($rows as $row): ?>
+			
+								<tr>
+									<td><?php echo $row['s_name']?></td>
+									<td><?php echo $row['s_type']?></td>
+									<td><?php echo $row['AVG(s_price)']?></td>
+								</tr>
+								<?php endforeach; ?>
+							</table>
+						<?php endif;
+
+						if(isset($_POST['price']) && $_POST['price'] == 'MAX'):
 							$sql = "SELECT s_name, s_type, MAX(s_price) FROM supplies_item
 									WHERE s_type LIKE ? GROUP BY s_name";
 							$statement = $pdo->prepare($sql);
 							$statement->execute(array('%'.$selected.'%'));
-							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	
-							foreach($rows as $row){
-								echo nl2br("\r\n".' '.$row['s_name'].' '.$row['s_type'].', Max Price: $'.$row['MAX(s_price)']);
-							}
-						}
-						if(isset($_POST['price']) && $_POST['price'] == 'MIN') {
+							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	?>
+							<table>
+								<tr>
+									<th>Supplier Name</th>
+									<th>Product Type</th>
+									<th>Highest Price</th>
+								</tr>
+								<?php foreach($rows as $row): ?>
+			
+								<tr>
+									<td><?php echo $row['s_name']?></td>
+									<td><?php echo $row['s_type']?></td>
+									<td><?php echo $row['MAX(s_price)']?></td>
+								</tr>
+								<?php endforeach; ?>
+							</table>
+						<?php endif;
+						
+						if(isset($_POST['price']) && $_POST['price'] == 'MIN'):
 							$sql = "SELECT s_name, s_type, MIN(s_price) FROM supplies_item
 									WHERE s_type LIKE ? GROUP BY s_name";
 							$statement = $pdo->prepare($sql);
 							$statement->execute(array('%'.$selected.'%'));
-							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	
-							foreach($rows as $row){
-								echo nl2br("\r\n".' '.$row['s_name'].' '.$row['s_type'].', Min Price: $'.$row['MIN(s_price)']);
-							}
-						}
-						if(isset($_POST['price']) && $_POST['price'] == 'COUNT') {
+							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	?>
+							<table>
+								<tr>
+									<th>Supplier Name</th>
+									<th>Product Type</th>
+									<th>Lowest Price</th>
+								</tr>
+								<?php foreach($rows as $row): ?>
+			
+								<tr>
+									<td><?php echo $row['s_name']?></td>
+									<td><?php echo $row['s_type']?></td>
+									<td><?php echo $row['MIN(s_price)']?></td>
+								</tr>
+								<?php endforeach; ?>
+							</table>
+						<?php endif;
+						
+						if(isset($_POST['price']) && $_POST['price'] == 'COUNT'):
 							$sql = "SELECT s_name, s_pname, s_type, COUNT(s_pname) FROM supplies_item
 									WHERE s_type LIKE ? GROUP BY s_name";
 							$statement = $pdo->prepare($sql);
 							$statement->execute(array('%'.$selected.'%'));
-							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	
-							foreach($rows as $row){
-								echo nl2br("\r\n".' '.$row['s_name'].' '.$row['s_type'].', Count: '.$row['COUNT(s_pname)']);
-							}	
-						}
+							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	?>
+							<table>
+								<tr>
+									<th>Supplier Name</th>
+									<th>Product Type</th>
+									<th>Quantity</th>
+								</tr>
+								<?php foreach($rows as $row): ?>
+			
+								<tr>
+									<td><?php echo $row['s_name']?></td>
+									<td><?php echo $row['s_type']?></td>
+									<td><?php echo $row['COUNT(s_pname)']?></td>
+								</tr>
+								<?php endforeach; ?>
+							</table>
+						<?php endif;
+						
 					} else {
-						if(isset($_POST['price']) && $_POST['price'] == 'AVG') {
+						if(isset($_POST['price']) && $_POST['price'] == 'AVG'):
 							$sql = "SELECT s_type, AVG(s_price) FROM supplies_item
 									WHERE s_type LIKE ?";
 							$statement = $pdo->prepare($sql);
 							$statement->execute(array('%'.$selected.'%'));
-							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	
-							foreach($rows as $row){
-								echo nl2br("\r\n".' '.$row['s_type'].', Avg Price: $'.$row['AVG(s_price)']);
-							}
-						}
-						if(isset($_POST['price']) && $_POST['price'] == 'MAX') {
+							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	?>
+							<table>
+								<tr>
+									<th>Product Type</th>
+									<th>Average Price</th>
+								</tr>
+								<?php foreach($rows as $row): ?>
+			
+								<tr>
+									<td><?php echo $row['s_type']?></td>
+									<td><?php echo $row['AVG(s_price)']?></td>
+								</tr>
+								<?php endforeach; ?>
+							</table>
+						<?php endif;
+						
+						if(isset($_POST['price']) && $_POST['price'] == 'MAX'):
 							$sql = "SELECT s_type, MAX(s_price) FROM supplies_item
 									WHERE s_type LIKE ?";
 							$statement = $pdo->prepare($sql);
 							$statement->execute(array('%'.$selected.'%'));
-							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	
-							foreach($rows as $row){
-								echo nl2br("\r\n".' '.$row['s_type'].', Max Price: $'.$row['MAX(s_price)']);
-							}
-						}
-						if(isset($_POST['price']) && $_POST['price'] == 'MIN') {
+							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	?>
+							<table>
+								<tr>
+									<th>Product Type</th>
+									<th>Highest Price</th>
+								</tr>
+								<?php foreach($rows as $row): ?>
+			
+								<tr>
+									<td><?php echo $row['s_type']?></td>
+									<td><?php echo $row['MAX(s_price)']?></td>
+								</tr>
+								<?php endforeach; ?>
+							</table>
+						<?php endif;
+						
+						if(isset($_POST['price']) && $_POST['price'] == 'MIN'):
 							$sql = "SELECT s_type, MIN(s_price) FROM supplies_item
 									WHERE s_type LIKE ?";
 							$statement = $pdo->prepare($sql);
 							$statement->execute(array('%'.$selected.'%'));
-							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	
-							foreach($rows as $row){
-								echo nl2br("\r\n".' '.$row['s_type'].', Min Price: $'.$row['MIN(s_price)']);
-							}
-						}
-						if(isset($_POST['price']) && $_POST['price'] == 'COUNT') {
+							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	?>
+							<table>
+								<tr>
+									<th>Product Type</th>
+									<th>Lowest Price</th>
+								</tr>
+								<?php foreach($rows as $row): ?>
+			
+								<tr>
+									<td><?php echo $row['s_type']?></td>
+									<td><?php echo $row['MIN(s_price)']?></td>
+								</tr>
+								<?php endforeach; ?>
+							</table>
+						<?php endif;
+						
+						if(isset($_POST['price']) && $_POST['price'] == 'COUNT'):
 							$sql = "SELECT s_pname, s_type, COUNT(s_pname) FROM supplies_item
 									WHERE s_type LIKE ?";
 							$statement = $pdo->prepare($sql);
 							$statement->execute(array('%'.$selected.'%'));
-							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	
-							foreach($rows as $row){
-								echo nl2br("\r\n".' '.$row['s_type'].', Count: '.$row['COUNT(s_pname)']);
-							}
-						}
+							$rows = $statement->fetchAll(PDO::FETCH_ASSOC);	?>
+							<table>
+								<tr>
+									<th>Product Type</th>
+									<th>Quantity</th>
+								</tr>
+								<?php foreach($rows as $row): ?>
+			
+								<tr>
+									<td><?php echo $row['s_type']?></td>
+									<td><?php echo $row['COUNT(s_pname)']?></td>
+								</tr>
+								<?php endforeach; ?>
+							</table>
+						<?php endif;
 					}
 				}
 				echo "<br />";
@@ -254,40 +349,29 @@ form {
 						FROM supplies_item";
 				$statement = $pdo->prepare($sql);
 				$statement->execute(array($sql));
-				$rows = $statement->fetchAll(PDO::FETCH_ASSOC);
-				foreach($rows as $row){
-					echo nl2br("\r\n".' '.$row['s_name'].' '.$row['s_pname'].' '.$row['s_type']);
-				}
-				echo "<br />";
-			}
-			/*
-			if (isset($_POST['type']) && $_POST['type'] == 'Processor'){
-				$sql = "SELECT s_name, s_pname, s_type, s_price FROM supplies_item
-						WHERE s_type LIKE 'Processor' ORDER BY s_name";
-				$statement = $pdo->prepare($sql);
-				$statement->execute(array('%'.$_POST['type'].'%'));
-				$rows = $statement->fetchAll(PDO::FETCH_ASSOC);
-				foreach($rows as $row){
-					echo nl2br("\r\n".' '.$row['s_name'].' '.$row['s_pname'].' '.$row['s_type'].', Price: $'.$row['s_price']);
-				}
-				echo "<br />";
-			}
-			*/
-			/*
-			$types = $_POST['type'];
-			if(empty($types)){
-				echo "No Product Type selected.";
-			} else {
-				$N = count($types);
-				for($i=0; $i<$N; $i++){
-				}
-			}
-			*/		
+				$rows = $statement->fetchAll(PDO::FETCH_ASSOC); ?>
+				<table>
+					<tr>
+						<th>Supplier Name</th>
+						<th>Product Name</th>
+						<th>Product ID</th>
+						<th>Current Stock</th>
+						<th>Product Type</th>
+						<th>Price</th>
+					</tr>
+					<?php foreach($rows as $row): ?>
 			
-			
-		?>
-	
-		
+					<tr>
+						<td><?php echo $row['s_name']?></td>
+						<td><?php echo $row['s_pname']?></td>
+						<td><?php echo $row['s_pid']?></td>
+						<td><?php echo $row['s_stock']?></td>
+						<td><?php echo $row['s_type']?></td>
+						<td><?php echo $row['s_price']?></td>
+					</tr>
+					<?php endforeach; ?>
+				</table>
+			<?php }?>
 		<div id="right" class="column">&nbsp;</div>
 		
 		
