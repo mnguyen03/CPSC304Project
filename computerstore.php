@@ -97,23 +97,9 @@ form {
 	<div id="left" class="column">&nbsp;</div>
 	<div id="middle" class="column">
 		<center>
-			<div id="header"><h1><table cellpadding=10px>
-									<tr>
-										<td><a href="computerstore.php">
-												H.<font size=5px>ugo</font><br>
-												T.<font size=5px>revor</font><br>
-												M.<font size=5px>ichelle</font><br>
-												L.<font size=5px>iJye</font><br>
-											</a>
-										</td>
-										<td><a href="computerstore.php">
-												Computer Store
-											</a>
-										</td>
-									</tr>
-								</table>
-							</h1>
-			</div>
+			<a href="computerstore.php">
+				<IMG SRC="304Matrix.jpg" alt="Make sure you put 304Matrix.jpg in the correct folder" width = "640" height="360"/>
+			</a>
 			<div id="nav"><h2><a href="login.php">Login</a> | 
 							  <a href="account.php">My Account</a> |
 							  <a href="shoppingcart.php">Shopping Cart</a> |
