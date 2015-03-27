@@ -238,9 +238,13 @@ form {
 				?>
 				
 				<?php 
-				if ((!empty($_SESSION)) && ($_SESSION['admin'] = 'true')) {
-					echo "You are logged in!";
-				} else { ?>
+				if ((!empty($_SESSION)) && ($_SESSION["admin"] == "false")) {
+					echo "You do not have access!";  }
+					
+				if ((!empty($_SESSION)) && ($_SESSION["admin"] == "true")) {
+					redirect("admin.php"); }
+				
+				if (empty($_SESSION)) { ?>
 				<h2>Administrator Log In</h2>
 					<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
 						Admin ID: <input type="text" name="id"><br><br>

@@ -163,14 +163,14 @@ form {
 	
 	session_start();
 	
-	if ($_SESSION['admin'] = "false") {
+	if ($_SESSION["admin"] !== "true") {
 		redirect("adminlogin.php");
 	}
 	
-						function redirect($url, $statusCode = 303) {
-						header('Location: ' . $url, true, $statusCode);
-						die();
-					}
+	function redirect($url, $statusCode = 303) {
+		header('Location: ' . $url, true, $statusCode);
+		die();
+	}
 	
 	
 	if (!empty($_SESSION["user"])) {
