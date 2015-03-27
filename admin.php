@@ -67,6 +67,12 @@ input#evenbtn {
 	font-size: 15px;
 }
 
+input#nonorderitems {
+ 	border: 0px;
+	background: white;
+ 	font-family: Verdana;
+	font-size: 15px;
+ }
 h1 {
 	color: white; 
 	font-size: 50px;
@@ -192,13 +198,17 @@ form {
 				<form action="search.php" method="post">
 				<select name="itemType">
 					<option value="0">Select an item type</option>
-					<option value="1">Test1</option>
-					<option value="2">Test2</option>
-					<option value="3">Test3</option>
-					<option value="4">Test4</option>
-					<option value="5">Test5</option>
-					<option value="6">Test6</option>
-				</select>	
+					<option value="1">Case</option>
+					<option value="2">Headset</option>
+					<option value="3">Monitor</option>
+					<option value="4">Motherboard</option>
+					<option value="5">Mouse</option>
+					<option value="6">Power Supply</option>
+					<option value="7">Processor</option>
+					<option value="8">RAM</option>
+					<option value="9">SSD</option>
+					<option value="10">Video Card</option>
+				</select>
 				<input type="text" name="search" class="search" value=""></input>
 				<input type="submit" value="Search"/>
 				</form>
@@ -222,6 +232,13 @@ form {
 					<tr><td>Stock</td></tr>
 					<tr><td>Price Changes</td></tr>
 					<tr><td>Sale</td></tr>
+					<tr>
+ 						<td>
+ 							<form name="no_order_items" method="POST" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+ 							<input id="nonorderitems" type="submit" name="non_order_item_button" value="Customers With No Orders">
+ 							</form>
+ 						</td>
+ 					</tr>
 					</tbody>
 				</table>
 			</div>
@@ -233,9 +250,44 @@ form {
 					$statement->execute();
 					$rows = $statement->fetchALL(PDO::FETCH_ASSOC); 
 					}
+				elseif (!empty($_POST['non_order_item_button'])){
+ 					$sql = "SELECT C1.c_id, C1.c_name
+							FROM Customer_Account C1
+							WHERE NOT EXISTS
+								(SELECT *
+								FROM PurchaseHistory_Contains_Purchase P
+								WHERE EXISTS
+									(SELECT * 
+									FROM Customer_Account C2
+									WHERE (C1.c_id = C2.c_id)
+									AND (C2.c_id = P.c_id)))";
+ 					
+ 					$statement = $pdo->prepare($sql);
+ 					$statement->execute();
+ 					$rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+ 					echo $_POST['non_order_item_button'];
+					echo count ($rows);
+ 					}
 			 ?>
 			 
-			<?php if (!empty($rows)) { ?>
+			<?php if (!empty($rows)) { 
+						if (!empty($_POST['non_order_item_button'])){?>
+							<table id="tdisplay" border="1px" width="100%" cellpadding="4px">
+							<tbody align="center">
+						<tr>
+							<th>Customer ID</th>
+							<th>Customer Name</th>
+						<tr>
+				<?php	foreach($rows as $row): ?>
+						<tr><center>
+							<td><?php echo $row['c_name']?></td>
+							<td><?php echo $row['c_id']?></td>
+						</tr>
+			<?php endforeach; }
+						
+				else { ?>
+						</tbody>
+						</table>
 					<table id="tdisplay" border="1px" width="100%" cellpadding="4px">
 					<tbody align="center">
 						<tr>
@@ -251,7 +303,7 @@ form {
 							<td><?php echo $row['c_email']?></td>
 							<td><?php echo $row['c_phone']?></td>
 						</tr>
-			<?php endforeach; }?>
+			<?php endforeach; }} ?>
 					</tbody>
 					</table>
 					&nbsp;

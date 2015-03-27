@@ -117,7 +117,9 @@ table#items tr:nth-child(even) {
 				</tr>
 				
 				<input type="submit" value="Search"/>
-				<input type="submit" value="Advanced Search"/>
+				</form>
+				<form action="advancedsearch.php">
+					<button>Advanced Search</button>
 				</form>
 			</div>
 		</center>
