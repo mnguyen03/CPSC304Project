@@ -30,7 +30,8 @@ a {
 
 #display {
 	width: 60%;
-	padding: 40px;
+	padding-top: 50px;
+	padding-left: 100px;
 }
 
 #header {
@@ -229,7 +230,18 @@ form {
 				</table>
 			</div>
 		<div id="display" class="column">
+			
 		<?php 
+				if (empty($_POST)) {
+					if (!empty($_SESSION['user'])) {
+						echo "Welcome to our store!<br />";
+						echo 'You are the one, ' . $_SESSION['user'] . '...';
+					} else {
+						echo "Welcome to our store!<br />";
+						echo 'You are the one, guest...';						
+					}
+				}
+				
 				if(!empty($_POST['aboutusbtn'])) {
 					echo "<b>About Us <br /><br /></b>";
 					echo "Totally not sketch to buy from us ;)<br /><br />";
@@ -259,16 +271,12 @@ form {
 				
 				if(!empty($_POST['feedbackbtn'])) {
 					?>
-				<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
-   Name: <input type="text" name="name">
-   <br><br>
-   E-mail: <input type="text" name="email">
-   <br><br>
-   Comment: <textarea name="comment" rows="5" cols="70"></textarea>
-   <br><br>
-   <input type="submit" name="submit" value="Submit"> 
-</form>
-
+					<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
+						Name: <input type="text" name="name"><br><br>
+						E-mail: <input type="text" name="email"><br><br>
+						Comment: <textarea name="comment" rows="5" cols="70"></textarea><br><br>
+						<input type="submit" name="submit" value="Submit"> <br><br>
+					</form>
 					<?php
 				}
 		?>
