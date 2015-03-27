@@ -98,7 +98,7 @@ table#items tr:nth-child(even) {
 					<option value="9">SSD</option>
 					<option value="10">Video Card</option>
 				</select>
-				<input type="text" name="search" class="search" value=""></input>
+				<input type="text" name="search" class="search" value="" placeholder="Search for Product Name..."></input>
 				<table id="attributes" width="70%" cellpadding="5px" border="1px">
 				<tr>
 					<td>Select Attributes to Display:</td>

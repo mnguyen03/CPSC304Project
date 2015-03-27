@@ -172,7 +172,7 @@ form {
 					<option value="9">SSD</option>
 					<option value="10">Video Card</option>
 				</select>
-				<input type="text" name="search" class="search" value=""></input>
+				<input type="text" name="search" class="search" value="" placeholder="Search for Product Name..."></input>
 				<input type="submit" value="Search"/>
 				</form>
 				<form action="advancedsearch.php">
