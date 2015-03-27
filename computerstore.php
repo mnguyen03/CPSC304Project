@@ -28,6 +28,11 @@ a {
 	width: 25%;
 }
 
+#display {
+	width: 60%;
+	padding: 40px;
+}
+
 #header {
 	background: #384E82;
 	border: 1px solid white;
@@ -54,6 +59,21 @@ input#logoutbtn {
 	font-family: "Century Gothic";
 	font-size: 15px;
 	font-variant: small-caps;
+}
+
+input#evenbtn {
+	border: 0px;
+	background: white;
+	font-family: Verdana;
+	font-size: 15px;
+}
+
+input#oddbtn {
+	border: 0px;
+	background: #384E82;
+	color: white;
+	font-family: Verdana;
+	font-size: 15px;
 }
 
 h1 {
@@ -98,7 +118,7 @@ form {
 	<div id="middle" class="column">
 		<center>
 			<a href="computerstore.php">
-				<IMG SRC="304Matrix.jpg" alt="Make sure you put 304Matrix.jpg in the correct folder" width = "640" height="360"/>
+				<IMG SRC="304Matrix.jpg" alt="Make sure you put 304Matrix.jpg in the correct folder" width =100% height="360"/>
 			</a>
 			<div id="nav"><h2><a href="login.php">Login</a> | 
 							  <a href="account.php">My Account</a> |
@@ -170,21 +190,89 @@ form {
 			<div id="navbar" class="column">
 				<table id="items" width="100%" cellpadding="7px">
 					<tbody align="center">
-					<tr><td>Computer Hardware</td></tr>
-					<tr><td>Monitors</td></tr>
-					<tr><td>Keyboards</td></tr>
-					<tr><td>Mice</td></tr>
-					<tr><td>Laptops</td></tr>
-					<tr><td>Desktop PCs</td></tr>
-					<tr><td>Printers</td></tr>
-					<tr><td>Networking</td></tr>
-					<tr><td>Software</td></tr>
-					<tr><td>External Memory</td></tr>
-					<tr><td>Sale</td></tr>
+					<tr>
+						<td>
+							<form name="aboutus" method="POST" action="<?php echo $_SERVER["PHP_SELF"]?>">
+								<input id="evenbtn" type="submit" name="aboutusbtn" value="About Us">
+							</form>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<form name="shipping" method="POST" action="<?php echo $_SERVER["PHP_SELF"]?>">
+								<input id="oddbtn" type="submit" name="shippingbtn" value="Shipping">
+							</form>						
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<form name="admin" method="POST" action="<?php echo $_SERVER["PHP_SELF"]?>">
+								<input id="evenbtn" type="submit" name="adminbtn" value="Administrators">
+							</form>						
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<form name="contact" method="POST" action="<?php echo $_SERVER["PHP_SELF"]?>">
+								<input id="oddbtn" type="submit" name="contactbtn" value="Contact Us">
+							</form>						
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<form name="shipping" method="POST" action="<?php echo $_SERVER["PHP_SELF"]?>">
+								<input id="evenbtn" type="submit" name="feedbackbtn" value="Feedback">
+							</form>						
+						</td>
+					</tr>
 					</tbody>
 				</table>
 			</div>
+		<div id="display" class="column">
+		<?php 
+				if(!empty($_POST['aboutusbtn'])) {
+					echo "<b>About Us <br /><br /></b>";
+					echo "Totally not sketch to buy from us ;)<br /><br />";
+					echo '"10/10" - IGN';
+				} 
+				
+				if(!empty($_POST['shippingbtn'])) {
+					echo "test";
+				}
+				
+				if(!empty($_POST['adminbtn'])) {
+					echo "<b>Hugo Lee</b><br />";
+					echo "(555)-123-4567 ext. 1111<br /><br />";
+					echo "<b>Trevor Tuepah</b><br />";
+					echo "(555)-123-4567 ext. 2222<br /><br />";
+					echo "<b>Michelle Nguyen</b><br />";
+					echo "(555)-123-4567 ext. 3333<br /><br />";
+					echo "<b>LiJye Tong</b><br />";
+					echo "(555)-123-4567 ext. 4444<br /><br />";
+					
+				}
+				
+				if(!empty($_POST['contactbtn'])) {
+					echo "If you have any questions and/or concerns, <br />";
+					echo "please email us at <b>htmlstore@htmlstore.com</b>";
+				}
+				
+				if(!empty($_POST['feedbackbtn'])) {
+					?>
+				<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
+   Name: <input type="text" name="name">
+   <br><br>
+   E-mail: <input type="text" name="email">
+   <br><br>
+   Comment: <textarea name="comment" rows="5" cols="70"></textarea>
+   <br><br>
+   <input type="submit" name="submit" value="Submit"> 
+</form>
 
+					<?php
+				}
+		?>
+		</div>
 	</div></center>
 	<div id="right" class="column">&nbsp;</div>
 
