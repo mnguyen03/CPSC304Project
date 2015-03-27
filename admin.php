@@ -44,7 +44,7 @@ a {
 }
 
 #display {
-	width: 74%;
+	width: 75%;
 }
 
 .search{
@@ -63,22 +63,6 @@ input#logoutbtn {
 input#evenbtn {
 	border: 0px;
 	background: white;
-	font-family: Verdana;
-	font-size: 15px;
-}
-
-input#custorders {
-	border: 0px;
-	color: white;
-	background: #384E82;
-	font-family: Verdana;
-	font-size: 15px;
-}
-
-input#nonorderitems {
-	border: 0px;
-	color: white;
-	background: #384E82;
 	font-family: Verdana;
 	font-size: 15px;
 }
@@ -111,6 +95,15 @@ table#items {
 
 table#items tr:nth-child(even) {
 	background: #384E82;
+	color: white;
+}
+
+table#tdisplay {
+	border-collapse: collapse;
+}
+
+table#tdisplay tr:nth-child(even) {
+	background: #051C50;
 	color: white;
 }
 
@@ -170,6 +163,16 @@ form {
 	
 	session_start();
 	
+	if ($_SESSION['admin'] = "false") {
+		redirect("adminlogin.php");
+	}
+	
+						function redirect($url, $statusCode = 303) {
+						header('Location: ' . $url, true, $statusCode);
+						die();
+					}
+	
+	
 	if (!empty($_SESSION["user"])) {
 		echo "<br />" . "Welcome " . $_SESSION["user"];
 	} else {
@@ -214,65 +217,27 @@ form {
 							</form>
 						</td>
 					</tr>
-					<tr>
-						<td>
-							<form name="cust_orders" method="POST" action="<?php echo $_SERVER['PHP_SELF'] ?>">
-							<input id="custorders" type="submit" name="c_orders_button" value="Customer Orders">
-							</form>
-						</td>
-					</tr>
+					<tr><td>Customer Orders</td></tr>
 					<tr><td>Suppliers</td></tr>
 					<tr><td>Stock</td></tr>
+					<tr><td>Price Changes</td></tr>
 					<tr><td>Sale</td></tr>
-					<tr>
-						<td>
-							<form name="no_order_items" method="POST" action="<?php echo $_SERVER['PHP_SELF'] ?>">
-							<input id="nonorderitems" type="submit" name="non_order_item_button" value="Items With No Orders">
-							</form>
-						</td>
-					</tr>
 					</tbody>
 				</table>
 			</div>
 			<div id="display" class="column">
 			 <?php
-				if ($_POST) {
-					if (!empty($_POST['c_accs_button'])){
+				if (!empty($_POST['c_accs_button'])) {
 					$sql = "SELECT c_id, c_name, c_email, c_phone FROM customer_account";
 					$statement = $pdo->prepare($sql);
 					$statement->execute();
 					$rows = $statement->fetchALL(PDO::FETCH_ASSOC); 
 					}
-					elseif (!empty($_POST['c_orders_button'])){
-					$sql = "SELECT customer_account.c_id, customer_account.c_name, purchasehistory_contains_purchase.tid 
-							FROM customer_account JOIN purchasehistory_contains_purchase 
-							USING (c_id) JOIN purchase USING (tid) ORDER BY customer_account.c_id";
-					$statement = $pdo->prepare($sql);
-					$statement->execute();
-					$rows = $statement->fetchALL(PDO::FETCH_ASSOC); 
-					}
-					elseif (!empty($_POST['non_order_item_button'])){
-					$sql = "SELECT S.s_name, S.s_pname, S.s_pid
-							FROM Supplies_Item S 
-							WHERE S.s_pid NOT IN
-								((SELECT T.s_pid
-									FROM Purchase P, Supplies_Item T
-									WHERE T.s_pid = P.s_pid))";			
-					
-					$statement = $pdo->prepare($sql);
-					$statement->execute();
-					$rows = $statement->fetchAll(PDO::FETCH_ASSOC);
-					echo "ayy";
-					echo $_POST['non_order_item_button'];
-					}
-				}
 			 ?>
 			 
-			<?php 
-			echo count($rows);
-			if (!empty($rows)) { 
-				if (!empty($_POST['c_accs_button'])){ ?>
-					<table width="100%" border="1px">
+			<?php if (!empty($rows)) { ?>
+					<table id="tdisplay" border="1px" width="100%" cellpadding="4px">
+					<tbody align="center">
 						<tr>
 							<th>Customer ID</th>
 							<th>Customer Name</th>
@@ -280,45 +245,16 @@ form {
 							<th>Phone</th>
 						<tr>
 				<?php	foreach($rows as $row): ?>
-						<tr><center>
+						<tr>
 							<td><?php echo $row['c_id']?></td>
 							<td><?php echo $row['c_name']?></td>
 							<td><?php echo $row['c_email']?></td>
 							<td><?php echo $row['c_phone']?></td>
 						</tr>
-			<?php endforeach;
-				}
-			if (!empty($_POST['c_orders_button'])){ ?>
-					<table width="100%" border="1px">
-						<tr>
-							<th>Customer ID</th>
-							<th>Customer Name</th>
-							<th>Transaction ID</th>
-						<tr>
-				<?php	foreach($rows as $row): ?>
-						<tr><center>
-							<td><?php echo $row['c_id']?></td>
-							<td><?php echo $row['c_name']?></td>
-							<td><?php echo $row['tid']?></td>
-						</tr>
-			<?php endforeach; }
-				
-			if (!empty($_POST['non_order_item_button'])){?>
-					<table width="100%" border="1px">
-						<tr>
-							<th>Supplier Name</th>
-							<th>Product Name</th>
-							<th>PID</th>
-						<tr>
-				<?php	foreach($rows as $row): ?>
-						<tr><center>
-							<td><?php echo $row['s_name']?></td>
-							<td><?php echo $row['s_pname']?></td>
-							<td><?php echo $row['s_pid']?></td>
-						</tr>
-			<?php endforeach; }
-			}?>
+			<?php endforeach; }?>
+					</tbody>
 					</table>
+					&nbsp;
 			</div>
 	</div>
 	<div id="right" class="column">&nbsp;</div>

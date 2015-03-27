@@ -123,7 +123,12 @@ form {
 			<div id="nav"><h2><a href="login.php">Login</a> | 
 							  <a href="account.php">My Account</a> |
 							  <a href="shoppingcart.php">Shopping Cart</a> |
-							  <a href="adminlogin.php">Admin</a> |							  
+							  <?php
+								if ((!empty($_SESSION)) && ($_SESSION['admin'] = "true")) { ?>
+							  	  <a href="admin.php">Admin</a> | 
+								<?php } else { ?>
+								  <a href="adminlogin.php">Admin</a> |
+								<?php }	?>						  
 							<form action="logout.php"><input id="logoutbtn" type="submit" value="Log Out"></input></form>
 						  </h2>
 			</div>
@@ -182,22 +187,69 @@ form {
 			</div>
 		</center>
 			<div id="login" class="column"><center>
-			<?php
+				<?php
 				
-				if (empty($_SESSION)) {
-					echo "You are not logged in!";
-				} else {
+					$err = "";
+					$id = $name = $pass = "";
 
-					// remove all session variables			
-					session_unset(); 
+					if ($_SERVER["REQUEST_METHOD"] == "POST") {
+					   if ((empty($_POST['id'])) || (empty($_POST["name"])) || (empty($_POST["password"]))) {
+						 $err = "Please enter your id, username and/or password!";
+					   } else {
+						 $id = test_input($_POST['id']);
+						 $name = test_input($_POST["name"]);
+						 $pass = test_input($_POST["password"]);
+						 login($id, $name, $pass, $pdo);
+					   }
+					}
 
-					// destroy the session 
-					session_destroy();
-
-					echo "You are now logged out!";
-				}
-				
+					function test_input($data) {
+					   $data = trim($data);
+					   $data = stripslashes($data);
+					   $data = htmlspecialchars($data);
+					   return $data;
+					}
+					
+					function login($id, $name, $pass, $pdo) {
+						$sql = "SELECT e_pass FROM admin WHERE e_id='$id' AND e_name='$name'";
+						$statement = $pdo->prepare($sql);
+						$statement->execute();
+						$rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+						if ($rows == null) {
+							echo "Admin does not exist!";
+						}
+						foreach($rows as $row) {
+							if ($pass == $row['e_pass']) {
+								$_SESSION["user"] = $name;
+								$_SESSION["admin"] = "true";
+								redirect("admin.php");
+							?>
+							<?php
+							} else {
+								echo "Wrong password!";	
+							}
+						}
+					}
+					
+					function redirect($url, $statusCode = 303) {
+						header('Location: ' . $url, true, $statusCode);
+						die();
+					}
 				?>
+				
+				<?php 
+				if ((!empty($_SESSION)) && ($_SESSION['admin'] = 'true')) {
+					echo "You are logged in!";
+				} else { ?>
+				<h2>Administrator Log In</h2>
+					<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
+						Admin ID: <input type="text" name="id"><br><br>
+						Username: <input type="text" name="name"><br><br>
+						Password: <input type="password" name="password"><br><br>					
+						<input type="submit" name="submit" value="Log In"> <br><br>
+						<span class="error"><?php echo $err;?></span>
+					</form>
+				<?php } ?>
 				</center>
 			</div>
 	</div>

@@ -123,7 +123,12 @@ form {
 			<div id="nav"><h2><a href="login.php">Login</a> | 
 							  <a href="account.php">My Account</a> |
 							  <a href="shoppingcart.php">Shopping Cart</a> |
-							  <a href="admin.php">Admin</a> |							  
+							  <?php
+								if ((!empty($_SESSION)) && ($_SESSION['admin'] = "true")) { ?>
+							  	  <a href="admin.php">Admin</a> | 
+								<?php } else { ?>
+								  <a href="adminlogin.php">Admin</a> |
+								<?php }	?>							  
 							<form action="logout.php"><input id="logoutbtn" type="submit" value="Log Out"></input></form>
 						  </h2>
 			</div>
@@ -214,7 +219,9 @@ form {
 						}
 						foreach($rows as $row) {
 							if ($pass == $row['c_pass']) {
-								$_SESSION["user"] = $name; ?>
+								$_SESSION["user"] = $name; 
+								$_SESSION["admin"] = "false";
+							?>
 							<?php
 							} else {
 								echo "Wrong password!";	
