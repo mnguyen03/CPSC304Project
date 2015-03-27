@@ -227,7 +227,13 @@ form {
 							</form>
 						</td>
 					</tr>
-					<tr><td>Customer Orders</td></tr>
+					<tr>
+						<td>
+							<form name="order_search" method="POST" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+							<input id="orderbtn" type="submit" name="c_orders_button" value="Customer Orders">
+							</form>
+						</td>
+					</tr>
 					<tr><td>Suppliers</td></tr>
 					<tr><td>Stock</td></tr>
 					<tr><td>Price Changes</td></tr>
@@ -250,6 +256,7 @@ form {
 					$statement->execute();
 					$rows = $statement->fetchALL(PDO::FETCH_ASSOC); 
 					}
+					
 				elseif (!empty($_POST['non_order_item_button'])){
  					$sql = "SELECT C1.c_id, C1.c_name
 							FROM Customer_Account C1
@@ -268,10 +275,23 @@ form {
  					echo $_POST['non_order_item_button'];
 					echo count ($rows);
  					}
-			 ?>
+
+				if (!empty($_POST['c_orders_button'])) {
+					$sql = "SELECT customer_account.c_id, customer_account.c_name, purchasehistory_contains_purchase.tid
+							FROM customer_account 
+							JOIN purchasehistory_contains_purchase
+							USING (c_id)
+							JOIN purchase 
+							USING (tid)
+							ORDER BY c_id";
+					$statement = $pdo->prepare($sql);
+					$statement->execute();
+					$rows = $statement->fetchALL(PDO::FETCH_ASSOC); 
+					}
 			 
-			<?php if (!empty($rows)) { 
-						if (!empty($_POST['non_order_item_button'])){?>
+					if (!empty($_POST['non_order_item_button'])){
+						if (!empty($rows)) { 
+						 ?>
 							<table id="tdisplay" border="1px" width="100%" cellpadding="4px">
 							<tbody align="center">
 						<tr>
@@ -283,11 +303,12 @@ form {
 							<td><?php echo $row['c_name']?></td>
 							<td><?php echo $row['c_id']?></td>
 						</tr>
-			<?php endforeach; }
-						
-				else { ?>
+			<?php endforeach; }} ?>
 						</tbody>
 						</table>
+						
+			<?php if (!empty($_POST['c_accs_button'])) {
+						if (!empty($rows)) { ?>
 					<table id="tdisplay" border="1px" width="100%" cellpadding="4px">
 					<tbody align="center">
 						<tr>
@@ -302,6 +323,24 @@ form {
 							<td><?php echo $row['c_name']?></td>
 							<td><?php echo $row['c_email']?></td>
 							<td><?php echo $row['c_phone']?></td>
+						</tr>
+			<?php endforeach; }} ?>
+			</tbody>
+			</table>
+			<?php if (!empty($_POST['c_orders_button'])) {
+			if (!empty($rows)) { ?>
+					<table id="tdisplay" border="1px" width="100%" cellpadding="4px">
+					<tbody align="center">
+						<tr>
+							<th>Customer ID</th>
+							<th>Customer Name</th>
+							<th>Transaction ID</th>
+						<tr>
+				<?php	foreach($rows as $row): ?>
+						<tr>
+							<td><?php echo $row['c_id']?></td>
+							<td><?php echo $row['c_name']?></td>
+							<td><?php echo $row['tid']?></td>
 						</tr>
 			<?php endforeach; }} ?>
 					</tbody>
