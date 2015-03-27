@@ -5,7 +5,6 @@
 a {
 	color: white;
 	text-decoration: none;
-	padding-right: 10px;
 }
 
 #wrapper .column {
@@ -29,16 +28,13 @@ a {
 	width: 25%;
 }
 
-#statusbar {
-	margin-bottom: 15px;
-	color: white;
-	background-color: green;
+#login {
+	width: 60%;
+	padding-left: 20%;
 }
-
 
 #header {
 	background: #384E82;
-	height: 100%;
 	border: 1px solid white;
 }
 
@@ -46,13 +42,38 @@ a {
 	padding-bottom: 15px;
 }
 
-#login {
-	padding: 20px;
-	width: 60%;
+#statusbar {
+	margin-bottom: 15px;
+	color: white;
+	background-color: green;
 }
 
 .search{
-	width: 450px;
+	width: 350px;
+}
+
+input#logoutbtn {
+	border: 0px;
+	color: white;
+	background: #051C50;
+	font-family: "Century Gothic";
+	font-size: 15px;
+	font-variant: small-caps;
+}
+
+input#evenbtn {
+	border: 0px;
+	background: white;
+	font-family: Verdana;
+	font-size: 15px;
+}
+
+input#oddbtn {
+	border: 0px;
+	background: #384E82;
+	color: white;
+	font-family: Verdana;
+	font-size: 15px;
 }
 
 h1 {
@@ -61,9 +82,7 @@ h1 {
 	font-weight: bold; 
 	font-variant: small-caps;
 	font-family: Arial Black;
-	line-height: 50px; 
-	padding-top: 2px; 
-	padding-bottom: 5px;
+	line-height: 45px; 
 }
 
 h2 {
@@ -88,6 +107,9 @@ table#items tr:nth-child(even) {
 	color: white;
 }
 
+form {
+	display: inline;
+}
 
 </style>
 	<body>
@@ -95,10 +117,14 @@ table#items tr:nth-child(even) {
 	<div id="left" class="column">&nbsp;</div>
 	<div id="middle" class="column">
 		<center>
-			<div id="header"><h1><a class="header" href="computerstore.php">H.T.M.L. Computer Store</a></h1></div>
-			<div id="nav"><h2><a href="login.php">Login</a> 
-							  <a href="account.php">My Account</a>
-							  <a href="shoppingcart.php">Shopping Cart</a>
+			<a href="computerstore.php">
+				<IMG SRC="304Matrix.jpg" alt="Make sure you put 304Matrix.jpg in the correct folder" width =100% height="360"/>
+			</a>
+			<div id="nav"><h2><a href="login.php">Login</a> | 
+							  <a href="account.php">My Account</a> |
+							  <a href="shoppingcart.php">Shopping Cart</a> |
+							  <a href="admin.php">Admin</a> |							  
+							<form action="logout.php"><input id="logoutbtn" type="submit" value="Log Out"></input></form>
 						  </h2>
 			</div>
 			<div id="statusbar">
@@ -113,39 +139,49 @@ table#items tr:nth-child(even) {
 					exit;
 					}
 	
-					$yay = "\r\n Status: connected! \r\n";
-					echo nl2br($yay);
-					}
-					catch (PDOException $Exception){
-						$error = "\r\nCould not connect: " . $Exception->getMessage( );
-						echo nl2br($error);
-					}
-				?>
+	$yay = "\r\n Status: Connected to Database! \r\n";
+	echo $yay;
+	}
+	catch (PDOException $Exception){
+		$error = "\r\nCould not connect: " . $Exception->getMessage( );
+		echo nl2br($error);
+	}
+	
+	session_start();
+	
+/* 	$sql = "SELECT c_name FROM customer_account ORDER BY c_name";
+	echo "Customers: <br />";
+	foreach ($pdo->query($sql) as $row) {
+		echo nl2br($row['c_name']);
+		echo "<br />";
+	}
+	 */
+?>
 			</div>
 			<div id="searchbar">
-				<input type="text" name="search" class="search" value=""></input>
+				<form action="search.php" method="post">
+				<select name="itemType">
+					<option value="0">Select an item type</option>
+					<option value="1">Case</option>
+					<option value="2">Headset</option>
+					<option value="3">Monitor</option>
+					<option value="4">Motherboard</option>
+					<option value="5">Mouse</option>
+					<option value="6">Power Supply</option>
+					<option value="7">Processor</option>
+					<option value="8">RAM</option>
+					<option value="9">SSD</option>
+					<option value="10">Video Card</option>
+				</select>
+				<input type="text" name="search" class="search" value="" placeholder="Search for Product Name..."></input>
 				<input type="submit" value="Search"/>
-				<input type="submit" value="Advanced Search"/>
+				</form>
+				<form action="advancedsearch.php">
+					<button>Advanced Search</button>
+				</form>
 			</div>
 		</center>
-			<div id="navbar" class="column">
-				<table id="items" width="100%" cellpadding="7px">
-					<tbody align="center">
-					<tr><td>Computer Hardware</td></tr>
-					<tr><td>Monitors</td></tr>
-					<tr><td>Keyboards</td></tr>
-					<tr><td>Mice</td></tr>
-					<tr><td>Laptops</td></tr>
-					<tr><td>Desktop PCs</td></tr>
-					<tr><td>Printers</td></tr>
-					<tr><td>Networking</td></tr>
-					<tr><td>Software</td></tr>
-					<tr><td>External Memory</td></tr>
-					<tr><td>Sale</td></tr>
-					</tbody>
-				</table>
-			</div>
-			<div id="login" class="column">
+			<div id="login" class="column"><center>
 				<?php
 				
 					$err = "";
@@ -178,21 +214,27 @@ table#items tr:nth-child(even) {
 						}
 						foreach($rows as $row) {
 							if ($pass == $row['c_pass']) {
-								session_start();
-								$_SESSION["user"] = $name;
+								$_SESSION["user"] = $name; ?>
+							<?php
 							} else {
 								echo "Wrong password!";	
 							}
 						}
 					}
 				?>
-				<center><h2>Log In</h2>
+				
+				<?php 
+				if (!empty($_SESSION)) {
+					echo "You are logged in!";
+				} else { ?>
+				<h2>Log In</h2>
 					<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
 						Username: <input type="text" name="name"><br><br>
 						Password: <input type="password" name="password"><br><br>					
 						<input type="submit" name="submit" value="Log In"> <br><br>
-						<span class="error"> <?php echo $err;?></span>
+						<span class="error"><?php echo $err;?></span>
 					</form>
+				<?php } ?>
 				</center>
 			</div>
 	</div>
