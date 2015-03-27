@@ -12,6 +12,8 @@ drop table if exists Supplier cascade;
 
 CREATE TABLE Admin(
 	e_id INT NOT NULL,
+	e_name VARCHAR(20) NOT NULL,
+	e_pass VARCHAR(20) NOT NULL,
  	PRIMARY KEY (e_id)
  	);
  
@@ -115,16 +117,11 @@ CREATE TABLE PurchaseHistory_Contains_Purchase(
 	ON DELETE CASCADE ON UPDATE CASCADE
  	);
 
-INSERT INTO Admin VALUES(0);
-INSERT INTO Admin VALUES(1);
-INSERT INTO Admin VALUES(2);
-INSERT INTO Admin VALUES(3);
-INSERT INTO Admin VALUES(4);
-INSERT INTO Admin VALUES(5);
-INSERT INTO Admin VALUES(6);
-INSERT INTO Admin VALUES(7);
-INSERT INTO Admin VALUES(8);
-INSERT INTO Admin VALUES(9);
+INSERT INTO Admin (e_id, e_name, e_pass) VALUES(001, 'Hugo', 'admin1');
+INSERT INTO Admin (e_id, e_name, e_pass) VALUES(002, 'Trevor', 'admin2');
+INSERT INTO Admin (e_id, e_name, e_pass) VALUES(003, 'Michelle', 'admin3');
+INSERT INTO Admin (e_id, e_name, e_pass) VALUES(004, 'Li Jye', 'admin4');
+
 
 INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(0,'Adrian','Unit 1','adrian@gmail.com',5550001,'aaa');
 INSERT INTO Customer_Account (c_id,c_name,c_address, c_email,c_phone, c_pass) VALUES(1,'Brandon','Unit 2','brandon@gmail.com',5550002,'bbb');
@@ -363,33 +360,33 @@ INSERT INTO PurchaseHistory_Contains_Purchase (c_id, tid) VALUES (25, 22);
 INSERT INTO ShippingMethod (type, cost, eta) VALUES ('Regular', 10, '5 days');
 INSERT INTO ShippingMethod (type, cost, eta) VALUES ('Express', 25, '2 days');
 
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (0, 9);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (1, 9);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (2, 9);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (3, 8);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (4, 8);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (5, 8);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (6, 7);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (7, 7);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (8, 6);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (9, 6);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (10, 5);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (11, 5);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (12, 5);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (13, 5);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (14, 5);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (15, 5);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (16, 5);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (17, 5);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (18, 5);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (19, 5);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (20, 4);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (21, 4);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (22, 3);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (23, 2);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (24, 1);
-INSERT INTO Admin_Manages (c_id, e_id) VALUES (25, 0);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (0, 001);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (1, 002);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (2, 003);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (3, 004);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (4, 001);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (5, 002);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (6, 003);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (7, 004);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (8, 001);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (9, 002);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (10, 003);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (11, 004);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (12, 001);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (13, 002);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (14, 003);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (15, 004);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (16, 001);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (17, 002);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (18, 003);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (19, 004);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (20, 001);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (21, 002);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (22, 003);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (23, 004);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (24, 001);
+INSERT INTO Admin_Manages (c_id, e_id) VALUES (25, 003);
 
-INSERT INTO Admin_Edits (e_id, s_name, s_pid) VALUES (0, 'Asus', 4503);
-INSERT INTO Admin_Edits (e_id, s_name, s_pid) VALUES (1, 'Corsair', 8810);
-INSERT INTO Admin_Edits (e_id, s_name, s_pid) VALUES (9, 'ASRock', 4500);
+INSERT INTO Admin_Edits (e_id, s_name, s_pid) VALUES (001, 'Asus', 4503);
+INSERT INTO Admin_Edits (e_id, s_name, s_pid) VALUES (003, 'Corsair', 8810);
+INSERT INTO Admin_Edits (e_id, s_name, s_pid) VALUES (004, 'ASRock', 4500);
