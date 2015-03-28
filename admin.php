@@ -73,6 +73,16 @@ input#nonorderitems {
  	font-family: Verdana;
 	font-size: 15px;
  }
+ 
+ input#oddbtn {
+	border: 0px;
+	background: #384E82;
+	color: white;
+	font-family: Verdana;
+	font-size: 15px;
+}
+
+ 
 h1 {
 	color: white; 
 	font-size: 50px;
@@ -168,7 +178,13 @@ form {
 	}
 	
 	session_start();
+	?>
 	
+	<script>
+		var index = 0;
+	</script>
+	
+<?php							
 	if ($_SESSION["admin"] !== "true") {
 		redirect("adminlogin.php");
 	}
@@ -230,11 +246,17 @@ form {
 					<tr>
 						<td>
 							<form name="order_search" method="POST" action="<?php echo $_SERVER['PHP_SELF'] ?>">
-							<input id="orderbtn" type="submit" name="c_orders_button" value="Customer Orders">
+							<input id="oddbtn" type="submit" name="c_orders_button" value="Customer Orders">
 							</form>
 						</td>
 					</tr>
-					<tr><td>Suppliers</td></tr>
+					<tr>
+						<td>
+							<form name="edit_accounts" method="POST" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+							<input id="evenbtn" type="submit" name="c_edits_button" value="Manage Accounts">
+							</form>
+						</td>
+					</tr>
 					<tr><td>Stock</td></tr>
 					<tr><td>Price Changes</td></tr>
 					<tr><td>Sale</td></tr>
@@ -251,6 +273,19 @@ form {
 			</div>
 			<div id="display" class="column">
 			 <?php
+				if (isset($_POST['remove_users'])){
+				if (!empty($_SESSION['c_ids'])){
+				if ($_POST['remove'] != ""){
+						if ( in_array($_POST['remove'], $_SESSION['c_ids'])){
+						$delete = $_POST['remove'];
+						$sql = "DELETE FROM customer_account WHERE c_id = $delete";
+						$statement = $pdo->prepare($sql);
+						$statement->execute(array($_POST['remove']));
+						}
+						else echo "User not managed or found";
+					}
+				}
+				}
 				if (!empty($_POST['c_accs_button'])) {
 					$sql = "SELECT c_id, c_name, c_email, c_phone FROM customer_account";
 					$statement = $pdo->prepare($sql);
@@ -274,6 +309,7 @@ form {
  					$statement->execute();
  					$rows = $statement->fetchAll(PDO::FETCH_ASSOC);
  					echo $_POST['non_order_item_button'];
+					echo ": ";
 					echo count ($rows);
  					}
 
@@ -290,6 +326,16 @@ form {
 					$rows = $statement->fetchALL(PDO::FETCH_ASSOC); 
 					}
 			 
+				if (!empty($_POST['c_edits_button'])) {
+					$e_id = $_SESSION["id"];
+					$sql = "SELECT customer_account.c_id, customer_account.c_name
+							FROM customer_account, admin_manages
+							WHERE admin_manages.c_id = customer_account.c_id
+											AND admin_manages.e_id = $e_id";
+					$statement = $pdo->prepare($sql);
+					$statement->execute();
+					$rows = $statement->fetchALL(PDO::FETCH_ASSOC); 
+					}
 					if (!empty($_POST['non_order_item_button'])){
 						if (!empty($rows)) { 
 						 ?>
@@ -346,10 +392,36 @@ form {
 			<?php endforeach; }} ?>
 					</tbody>
 					</table>
-					&nbsp;
+			<?php if (!empty($_POST['c_edits_button'])) {
+			$array = array();
+			if (!empty($rows)) { ?>
+					<table id="tdisplay" border="1px" width="100%" cellpadding="4px">
+					<tbody align="center">
+						<tr><center> Accounts you manage
+						</center> </tr>
+						<tr>
+							<th>Customer ID</th>
+							<th>Customer Name</th>
+						<tr>
+				<?php	foreach($rows as $row): ?>
+						<tr>
+							<td><?php echo $row['c_id'];
+							array_push($array, $row['c_id']);
+							$_SESSION['c_ids'] = $array;
+							?></td>
+							<td><?php echo $row['c_name']?></td>
+						</tr>
+			<?php endforeach; ?>
+			<form name="remove_user" method="POST" action="admin.php">
+			<input type="text" name="remove" class="search" value=""></input>
+			<input type="submit" name="remove_users" value="Remove"/>
+			</form>
+			<?php }} ?> 
+			</tbody>
+			</table>
+			&nbsp;
 			</div>
 	</div>
 	<div id="right" class="column">&nbsp;</div>
-
 </body>
 </html>
