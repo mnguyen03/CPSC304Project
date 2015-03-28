@@ -28,6 +28,11 @@ a {
 	width: 25%;
 }
 
+#login {
+	width: 60%;
+	padding-left: 20%;
+}
+
 #header {
 	background: #384E82;
 	border: 1px solid white;
@@ -44,11 +49,9 @@ a {
 }
 
 #display {
-	width: 75%;
-}
-
-.search{
-	width: 350px;
+	width: 60%;
+	padding-top: 5%;
+	padding-left: 7%;
 }
 
 input#logoutbtn {
@@ -67,14 +70,7 @@ input#evenbtn {
 	font-size: 15px;
 }
 
-input#nonorderitems {
- 	border: 0px;
-	background: white;
- 	font-family: Verdana;
-	font-size: 15px;
- }
- 
- input#oddbtn {
+input#oddbtn {
 	border: 0px;
 	background: #384E82;
 	color: white;
@@ -82,7 +78,6 @@ input#nonorderitems {
 	font-size: 15px;
 }
 
- 
 h1 {
 	color: white; 
 	font-size: 50px;
@@ -102,6 +97,18 @@ h2 {
 	padding: 5px;
 }
 
+table {
+	padding: 15px;
+	font-family: Verdana;
+	font-size: 15px;
+	border-collapse: collapse;
+}
+
+table tr:nth-child(even) {
+	background: #051C50;
+	color: white;
+}
+
 table#items {
 	padding: 15px;
 	font-family: Verdana;
@@ -111,15 +118,6 @@ table#items {
 
 table#items tr:nth-child(even) {
 	background: #384E82;
-	color: white;
-}
-
-table#tdisplay {
-	border-collapse: collapse;
-}
-
-table#tdisplay tr:nth-child(even) {
-	background: #051C50;
 	color: white;
 }
 
@@ -133,27 +131,18 @@ form {
 	<div id="left" class="column">&nbsp;</div>
 	<div id="middle" class="column">
 		<center>
-			<div id="header"><h1><table cellpadding=10px>
-									<tr>
-										<td><a href="computerstore.php">
-												H.<font size=5px>ugo</font><br>
-												T.<font size=5px>revor</font><br>
-												M.<font size=5px>ichelle</font><br>
-												L.<font size=5px>iJye</font><br>
-											</a>
-										</td>
-										<td><a href="computerstore.php">
-												Computer Store
-											</a>
-										</td>
-									</tr>
-								</table>
-							</h1>
-			</div>
+			<a href="computerstore.php">
+				<IMG SRC="304Matrix.jpg" alt="Make sure you put 304Matrix.jpg in the correct folder" width =100% height="360"/>
+			</a>
 			<div id="nav"><h2><a href="login.php">Login</a> | 
 							  <a href="account.php">My Account</a> |
 							  <a href="shoppingcart.php">Shopping Cart</a> |
-							  <a href="admin.php">Admin</a> |
+							  <?php
+								if ((!empty($_SESSION)) && ($_SESSION['admin'] = "true")) { ?>
+							  	  <a href="admin.php">Admin</a> | 
+								<?php } else { ?>
+								  <a href="adminlogin.php">Admin</a> |
+								<?php }	?>						  
 							<form action="logout.php"><input id="logoutbtn" type="submit" value="Log Out"></input></form>
 						  </h2>
 			</div>
@@ -263,7 +252,7 @@ form {
 					<tr>
  						<td>
  							<form name="no_order_items" method="POST" action="<?php echo $_SERVER['PHP_SELF'] ?>">
- 							<input id="nonorderitems" type="submit" name="non_order_item_button" value="Customers With No Orders">
+ 							<input id="evenbtn" type="submit" name="non_order_item_button" value="Customers With No Orders">
  							</form>
  						</td>
  					</tr>
@@ -397,8 +386,7 @@ form {
 			if (!empty($rows)) { ?>
 					<table id="tdisplay" border="1px" width="100%" cellpadding="4px">
 					<tbody align="center">
-						<tr><center> Accounts you manage
-						</center> </tr>
+						<tr><center> Accounts You Manage...</center></tr>
 						<tr>
 							<th>Customer ID</th>
 							<th>Customer Name</th>
@@ -411,11 +399,11 @@ form {
 							?></td>
 							<td><?php echo $row['c_name']?></td>
 						</tr>
-			<?php endforeach; ?>
+			<?php endforeach; ?><center>
 			<form name="remove_user" method="POST" action="admin.php">
 			<input type="text" name="remove" class="search" value=""></input>
 			<input type="submit" name="remove_users" value="Remove"/>
-			</form>
+			</form></center><br>
 			<?php }} ?> 
 			</tbody>
 			</table>
