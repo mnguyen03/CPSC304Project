@@ -169,6 +169,7 @@ form {
 	
 	session_start();
 	
+	/*
 	if ($_SESSION["admin"] !== "true") {
 		redirect("adminlogin.php");
 	}
@@ -177,7 +178,7 @@ form {
 		header('Location: ' . $url, true, $statusCode);
 		die();
 	}
-	
+	*/
 	
 	if (!empty($_SESSION["user"])) {
 		echo "<br />" . "Welcome " . $_SESSION["user"];
@@ -245,7 +246,7 @@ form {
 				<div id="searchbar">
 					<input type="text" name="updateold" class="search" value="" placeholder="Enter Old PID Value"></input>
 					<input type="text" name="updatenew" class="search" value="" placeholder="Enter New PID Value"></input>
-					<input type="submit" value="Update"></input>
+					<input type="submit" name="enter" value="Update"></input>
 				</div>
 			</form>
 		<?php 
@@ -320,8 +321,19 @@ form {
 		//$_POST['updateold'] is the value that will be replaced with $_POST['updatenew']
 		if ($canupdate){
 			echo "setup SQL statement to update the PID value using variables in comments";
-			
+			$sql = "UPDATE supplies_item SET s_pid=? WHERE s_pid=?";
+			$statement = $pdo->prepare($sql);
+			$statement->execute(array($_POST['updatenew'], $_POST['updateold']));
+			echo $statement->rowCount() . " records UPDATED successfully.";
 		}
+		if(isset($_POST['enter']))
+			redirect("update.php");
+		
+		function redirect($url, $statusCode = 303) {
+		header('Location: ' . $url, true, $statusCode);
+		die();
+		}
+	?>
 		
 		
 		
