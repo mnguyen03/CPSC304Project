@@ -111,6 +111,7 @@ table tr:nth-child(even) {
 
 table#items {
 	padding: 15px;
+	margin-bottom: 15px;
 	font-family: Verdana;
 	align: middle;
 	font-size: 15px;

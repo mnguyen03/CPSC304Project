@@ -30,8 +30,8 @@ a {
 
 #display {
 	width: 60%;
-	padding-top: 50px;
-	padding-left: 100px;
+	padding-top: 7%;
+	padding-left: 7%;
 }
 
 #header {
@@ -255,7 +255,7 @@ form {
 				} 
 				
 				if(!empty($_POST['shippingbtn'])) {
-					echo "test";
+					echo "Page currently under construction.";
 				}
 				
 				if(!empty($_POST['adminbtn'])) {
@@ -265,7 +265,7 @@ form {
 					echo "(555)-123-4567 ext. 2222<br /><br />";
 					echo "<b>Michelle Nguyen</b><br />";
 					echo "(555)-123-4567 ext. 3333<br /><br />";
-					echo "<b>LiJye Tong</b><br />";
+					echo "<b>Li Jye Tong</b><br />";
 					echo "(555)-123-4567 ext. 4444<br /><br />";
 					
 				}
@@ -284,6 +284,14 @@ form {
 						<input type="submit" name="submit" value="Submit"> <br><br>
 					</form>
 					<?php
+				}
+				
+				if (!empty($_POST['submit'])) {
+					echo "Your submission has"
+					?>
+					<font color="white" size="1">not</font><br>
+					<?php
+					echo "been recorded. Thank you for your feedback!";
 				}
 		?>
 		</div>

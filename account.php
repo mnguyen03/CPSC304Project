@@ -209,7 +209,7 @@ form {
 				$sql = "DELETE FROM purchasehistory_contains_purchase WHERE c_id = (SELECT c_id FROM customer_account WHERE c_name = '$user')";
 				$statement = $pdo->prepare($sql);
 				$statement->execute();
-				echo "Deleted your purchase history";
+				echo "<br /><br />Deleted your purchase history!";
 			}
 			
 			?>
