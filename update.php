@@ -169,7 +169,6 @@ form {
 	
 	session_start();
 	
-	/*
 	if ($_SESSION["admin"] !== "true") {
 		redirect("adminlogin.php");
 	}
@@ -178,7 +177,6 @@ form {
 		header('Location: ' . $url, true, $statusCode);
 		die();
 	}
-	*/
 	
 	if (!empty($_SESSION["user"])) {
 		echo "<br />" . "Welcome " . $_SESSION["user"];
@@ -223,18 +221,24 @@ form {
 					<tr>
 						<td>
 							<form name="order_search" method="POST" action="<?php echo $_SERVER['PHP_SELF'] ?>">
-							<input id="orderbtn" type="submit" name="c_orders_button" value="Customer Orders">
+							<input id="oddbtn" type="submit" name="c_orders_button" value="Customer Orders">
 							</form>
 						</td>
 					</tr>
-					<tr><td>Suppliers</td></tr>
+					<tr>
+						<td>
+							<form name="edit_accounts" method="POST" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+							<input id="evenbtn" type="submit" name="c_edits_button" value="Manage Accounts">
+							</form>
+						</td>
+					</tr>
 					<tr><td>Stock</td></tr>
 					<tr><td>Price Changes</td></tr>
 					<tr><td>Sale</td></tr>
 					<tr>
  						<td>
  							<form name="no_order_items" method="POST" action="<?php echo $_SERVER['PHP_SELF'] ?>">
- 							<input id="nonorderitems" type="submit" name="non_order_item_button" value="Customers With No Orders">
+ 							<input id="evenbtn" type="submit" name="non_order_item_button" value="Customers With No Orders">
  							</form>
  						</td>
  					</tr>
@@ -242,13 +246,7 @@ form {
 					</tbody>
 				</table>
 			</div>
-			<form action="update.php" method="post">
-				<div id="searchbar">
-					<input type="text" name="updateold" class="search" value="" placeholder="Enter Old PID Value"></input>
-					<input type="text" name="updatenew" class="search" value="" placeholder="Enter New PID Value"></input>
-					<input type="submit" name="enter" value="Update"></input>
-				</div>
-			</form>
+			
 		<?php 
 			$sql = "SELECT * FROM supplies_item";
 			$statement = $pdo->prepare($sql);
@@ -260,13 +258,18 @@ form {
 			$pids[$index] = $row['s_pid'];
 			$index = $index + 1;
 			}
-			
-			if ( ( strcmp($_POST['updateold'], "") == 0) or (strcmp($_POST['updatenew'], "") == 0)   ){
-			echo "Please make sure you enter a PID in both fields";
-			}
-			
+			?>
+			<form action="update.php" method="post">
+				<div id="searchbar">
+					<input type="text" name="updateold" class="search" value="" placeholder="Enter Old PID Value"></input>
+					<input type="text" name="updatenew" class="search" value="" placeholder="Enter New PID Value"></input>
+					<input type="submit" name="enter" value="Update"></input>
+				</div>
+			</form>
+		<?php
 			//check the old value does exist in the table and new value does not exist in the table
-			else{
+			$canupdate = False;
+			if (isset($_POST['updateold']) or isset($_POST['updatenew'])) {
 				$canupdate = True;
 				$existsold = False;
 				foreach($pids as $pid){
@@ -290,6 +293,8 @@ form {
 					echo "New value already exists in the table. Please choose a value that doesn't exist to update";
 					$canupdate = False;
 				}
+			} else {
+				echo "Please make sure you enter a PID in both fields.";
 			}
 			
 			
@@ -319,20 +324,13 @@ form {
 	</table>
 	<?php
 		//$_POST['updateold'] is the value that will be replaced with $_POST['updatenew']
-		if ($canupdate){
-			echo "setup SQL statement to update the PID value using variables in comments";
-			$sql = "UPDATE supplies_item SET s_pid=? WHERE s_pid=?";
-			$statement = $pdo->prepare($sql);
-			$statement->execute(array($_POST['updatenew'], $_POST['updateold']));
-			echo $statement->rowCount() . " records UPDATED successfully.";
-		}
-		if(isset($_POST['enter']))
-			redirect("update.php");
-		
-		function redirect($url, $statusCode = 303) {
-		header('Location: ' . $url, true, $statusCode);
-		die();
-		}
+			if ($canupdate){
+				echo "setup SQL statement to update the PID value using variables in comments";
+				$sql = "UPDATE supplies_item SET s_pid=? WHERE s_pid=?";
+				$statement = $pdo->prepare($sql);
+				$statement->execute(array($_POST['updatenew'], $_POST['updateold']));
+				echo $statement->rowCount() . " records UPDATED successfully.";
+			}
 	?>
 		
 		
