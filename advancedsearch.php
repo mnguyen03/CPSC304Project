@@ -141,6 +141,7 @@ form {
 						<input type="checkbox" name="type[]" value="SSD">SSD</input><br>
 						<input type="checkbox" name="type[]" value="Mouse">Mice</input><br>
 						<input type="checkbox" name="type[]" value="Headset">Headsets</input><br><br>
+						<input type="checkbox" name="type[]" value="Case">Cases</input><br><br>
 					</td>
 					<td>
 						<input type="radio" name="group" value="1">Show Each Supplier</input><br>
