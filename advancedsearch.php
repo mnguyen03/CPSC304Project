@@ -228,7 +228,6 @@ form {
 					</td>
 				<tr>
 					<td colspan="3"><center>
-						<input type="search" name="search" class="search"></input>
 						<input type="submit"></input>
 						</center>
 					</td>

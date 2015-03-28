@@ -24,8 +24,9 @@ a {
 	width: 25%;
 }
 
-#navbar {
-	width: 25%;
+
+#display {
+	padding-top: 5%;
 }
 
 #header {
@@ -43,12 +44,12 @@ a {
 	background-color: green;
 }
 
-#display {
-	width: 75%;
-}
-
 .search{
 	width: 350px;
+}
+
+.search#updateold {
+	width: 100px;
 }
 
 input#logoutbtn {
@@ -67,12 +68,14 @@ input#evenbtn {
 	font-size: 15px;
 }
 
-input#nonorderitems {
- 	border: 0px;
-	background: white;
- 	font-family: Verdana;
+input#oddbtn {
+	border: 0px;
+	background: #384E82;
+	color: white;
+	font-family: Verdana;
 	font-size: 15px;
- }
+}
+
 h1 {
 	color: white; 
 	font-size: 50px;
@@ -92,25 +95,13 @@ h2 {
 	padding: 5px;
 }
 
-table#items {
+table {
 	padding: 15px;
+	margin-bottom: 15px;
 	font-family: Verdana;
 	align: middle;
 	font-size: 15px;
-}
-
-table#items tr:nth-child(even) {
-	background: #384E82;
-	color: white;
-}
-
-table#tdisplay {
 	border-collapse: collapse;
-}
-
-table#tdisplay tr:nth-child(even) {
-	background: #051C50;
-	color: white;
 }
 
 form {
@@ -123,27 +114,19 @@ form {
 	<div id="left" class="column">&nbsp;</div>
 	<div id="middle" class="column">
 		<center>
-			<div id="header"><h1><table cellpadding=10px>
-									<tr>
-										<td><a href="computerstore.php">
-												H.<font size=5px>ugo</font><br>
-												T.<font size=5px>revor</font><br>
-												M.<font size=5px>ichelle</font><br>
-												L.<font size=5px>iJye</font><br>
-											</a>
-										</td>
-										<td><a href="computerstore.php">
-												Computer Store
-											</a>
-										</td>
-									</tr>
-								</table>
-							</h1>
-			</div>
+			<a href="computerstore.php">
+				<IMG SRC="304Matrix.jpg" alt="Make sure you put 304Matrix.jpg in the correct folder" width =100% height="360"/>
+			</a>
 			<div id="nav"><h2><a href="login.php">Login</a> | 
 							  <a href="account.php">My Account</a> |
 							  <a href="shoppingcart.php">Shopping Cart</a> |
-							  <a href="admin.php">Admin</a> |
+							  <?php
+								if ((!empty($_SESSION)) && ($_SESSION['admin'] = "true")) { ?>
+							  	  <a href="admin.php">Admin</a> | 
+								<?php } else { ?>
+								  <a href="adminlogin.php">Admin</a> |
+								<?php }	?>
+								  
 							<form action="logout.php"><input id="logoutbtn" type="submit" value="Log Out"></input></form>
 						  </h2>
 			</div>
@@ -169,20 +152,19 @@ form {
 	
 	session_start();
 	
-	if ($_SESSION["admin"] !== "true") {
-		redirect("adminlogin.php");
-	}
-	
-	function redirect($url, $statusCode = 303) {
-		header('Location: ' . $url, true, $statusCode);
-		die();
-	}
-	
 	if (!empty($_SESSION["user"])) {
 		echo "<br />" . "Welcome " . $_SESSION["user"];
 	} else {
 		echo "<br />" . "Currently not logged in.";
 	}
+	
+/* 	$sql = "SELECT c_name FROM customer_account ORDER BY c_name";
+	echo "Customers: <br />";
+	foreach ($pdo->query($sql) as $row) {
+		echo nl2br($row['c_name']);
+		echo "<br />";
+	}
+	 */
 ?>
 			</div>
 			<div id="searchbar">
@@ -208,44 +190,7 @@ form {
 				</form>
 			</div>
 		</center>
-			<div id="navbar" class="column">
-				<table id="items" width="100%" cellpadding="7px">
-					<tbody align="center">
-					<tr>
-						<td>
-							<form name="acc_search" method="POST" action="<?php echo $_SERVER['PHP_SELF'] ?>">
-							<input id="evenbtn" type="submit" name="c_accs_button" value="Customer Accounts">
-							</form>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<form name="order_search" method="POST" action="<?php echo $_SERVER['PHP_SELF'] ?>">
-							<input id="oddbtn" type="submit" name="c_orders_button" value="Customer Orders">
-							</form>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<form name="edit_accounts" method="POST" action="<?php echo $_SERVER['PHP_SELF'] ?>">
-							<input id="evenbtn" type="submit" name="c_edits_button" value="Manage Accounts">
-							</form>
-						</td>
-					</tr>
-					<tr><td>Stock</td></tr>
-					<tr><td>Price Changes</td></tr>
-					<tr><td>Sale</td></tr>
-					<tr>
- 						<td>
- 							<form name="no_order_items" method="POST" action="<?php echo $_SERVER['PHP_SELF'] ?>">
- 							<input id="evenbtn" type="submit" name="non_order_item_button" value="Customers With No Orders">
- 							</form>
- 						</td>
- 					</tr>
-					<tr><td><a href="update.php">Update PIDs</a></td></tr>
-					</tbody>
-				</table>
-			</div>
+			<div id="display" class="column"><center>
 			
 		<?php 
 			$sql = "SELECT * FROM supplies_item";
@@ -294,13 +239,14 @@ form {
 					$canupdate = False;
 				}
 			} else {
-				echo "Please make sure you enter a PID in both fields.";
+				echo "<b>Please make sure you enter a PID in both fields.</b><br /><br />";
 			}
 			
 			
 			
 			?>
-	<table>
+	<table border="1px">
+	<tbody align="center">
 			<tr>
 
 				<th>Supplier Name</th>
@@ -309,7 +255,7 @@ form {
 				<th>Current Stock</th>
 				<th>Product Type</th>
 				<th>Price</th>
-			<tr>
+			</tr>
 			<?php foreach($rows as $row):?>
 			
 			<tr>
@@ -321,6 +267,7 @@ form {
 				<td><?php echo $row['s_price']?></td>
 			</tr>
 		<?php endforeach; ?>
+	</tbody>
 	</table>
 	<?php
 		//$_POST['updateold'] is the value that will be replaced with $_POST['updatenew']
@@ -330,9 +277,17 @@ form {
 				$statement = $pdo->prepare($sql);
 				$statement->execute(array($_POST['updatenew'], $_POST['updateold']));
 				echo $statement->rowCount() . " records UPDATED successfully.";
+				echo "<script type='text/javascript'>window.location.href = 'update.php';</script>";
+				exit();
+				
 			}
+			
+
 	?>
-		
+	</center>
+	</div>
+	</div>
+	</body></html>
 		
 		
 		
