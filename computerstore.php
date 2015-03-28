@@ -240,11 +240,17 @@ form {
 		<?php 
 				if (empty($_POST)) {
 					if (!empty($_SESSION['user'])) {
-						echo "Welcome to our store!<br />";
-						echo 'You are the one, ' . $_SESSION['user'] . '...';
+						echo "Welcome to our store, ". $_SESSION['user'] ."!<br /><br /><br />";
+						echo "You just need to believe the queries are there and <br />";
+						echo "you can achieve anything,<br />";
+						echo "Like if you know the truth behind the matrix, <br />";
+						echo "We know the truth behind the queries.";
 					} else {
-						echo "Welcome to our store!<br />";
-						echo 'You are the one, guest...';						
+						echo "Welcome to our store, guest!<br /><br /><br />";
+						echo "You just need to believe the queries are there and <br />";
+						echo "you can achieve anything,<br />";
+						echo "Like if you know the truth behind the matrix, <br />";
+						echo "We know the truth behind the queries.";					
 					}
 				}
 				
