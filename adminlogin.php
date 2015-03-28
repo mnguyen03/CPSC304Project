@@ -221,6 +221,7 @@ form {
 						foreach($rows as $row) {
 							if ($pass == $row['e_pass']) {
 								$_SESSION["user"] = $name;
+								$_SESSION["id"] = $id;
 								$_SESSION["admin"] = "true";
 								redirect("admin.php");
 							?>
