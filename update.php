@@ -184,14 +184,6 @@ form {
 	} else {
 		echo "<br />" . "Currently not logged in.";
 	}
-	
-/* 	$sql = "SELECT c_name FROM customer_account ORDER BY c_name";
-	echo "Customers: <br />";
-	foreach ($pdo->query($sql) as $row) {
-		echo nl2br($row['c_name']);
-		echo "<br />";
-	}
-	 */
 ?>
 			</div>
 			<div id="searchbar">
@@ -249,107 +241,88 @@ form {
 					</tbody>
 				</table>
 			</div>
-			<div id="display" class="column">
-			 <?php
-				if (!empty($_POST['c_accs_button'])) {
-					$sql = "SELECT c_id, c_name, c_email, c_phone FROM customer_account";
-					$statement = $pdo->prepare($sql);
-					$statement->execute();
-					$rows = $statement->fetchALL(PDO::FETCH_ASSOC); 
+			<form action="update.php" method="post">
+				<div id="searchbar">
+					<input type="text" name="updateold" class="search" value="" placeholder="Enter Old PID Value"></input>
+					<input type="text" name="updatenew" class="search" value="" placeholder="Enter New PID Value"></input>
+					<input type="submit" value="Update"></input>
+				</div>
+			</form>
+		<?php 
+			$sql = "SELECT * FROM supplies_item";
+			$statement = $pdo->prepare($sql);
+			$statement->execute();
+			$rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+			$pids = array();
+			$index = 0;
+			foreach($rows as $row){
+			$pids[$index] = $row['s_pid'];
+			$index = $index + 1;
+			}
+			
+			if ( ( strcmp($_POST['updateold'], "") == 0) or (strcmp($_POST['updatenew'], "") == 0)   ){
+			echo "Please make sure you enter a PID in both fields";
+			}
+			
+			//check the old value does exist in the table and new value does not exist in the table
+			else{
+				$canupdate = True;
+				$existsold = False;
+				foreach($pids as $pid){
+					if($pid == $_POST['updateold']){
+						$existsold = True;
+						break;
 					}
-					
-				elseif (!empty($_POST['non_order_item_button'])){
- 					$sql = "SELECT C1.c_id, C1.c_name
-							FROM Customer_Account C1
-							WHERE NOT EXISTS
-								(SELECT *
-								FROM PurchaseHistory_Contains_Purchase P
-								WHERE EXISTS
-									(SELECT * 
-									FROM Customer_Account C2
-									WHERE (C1.c_id = C2.c_id)
-									AND (C2.c_id = P.c_id)))";
- 					
- 					$statement = $pdo->prepare($sql);
- 					$statement->execute();
- 					$rows = $statement->fetchAll(PDO::FETCH_ASSOC);
- 					echo $_POST['non_order_item_button'];
-					echo count ($rows);
- 					}
-
-				if (!empty($_POST['c_orders_button'])) {
-					$sql = "SELECT customer_account.c_id, customer_account.c_name, purchasehistory_contains_purchase.tid
-							FROM customer_account 
-							JOIN purchasehistory_contains_purchase
-							USING (c_id)
-							JOIN purchase 
-							USING (tid)
-							ORDER BY c_id";
-					$statement = $pdo->prepare($sql);
-					$statement->execute();
-					$rows = $statement->fetchALL(PDO::FETCH_ASSOC); 
+				}
+				if(!$existsold){
+					echo "Old value does not exist in the table. Please choose an existing value to replace";
+					$canupdate = False;
 					}
-			 
-					if (!empty($_POST['non_order_item_button'])){
-						if (!empty($rows)) { 
-						 ?>
-							<table id="tdisplay" border="1px" width="100%" cellpadding="4px">
-							<tbody align="center">
-						<tr>
-							<th>Customer ID</th>
-							<th>Customer Name</th>
-						<tr>
-				<?php	foreach($rows as $row): ?>
-						<tr><center>
-							<td><?php echo $row['c_name']?></td>
-							<td><?php echo $row['c_id']?></td>
-						</tr>
-			<?php endforeach; }} ?>
-						</tbody>
-						</table>
-						
-			<?php if (!empty($_POST['c_accs_button'])) {
-						if (!empty($rows)) { ?>
-					<table id="tdisplay" border="1px" width="100%" cellpadding="4px">
-					<tbody align="center">
-						<tr>
-							<th>Customer ID</th>
-							<th>Customer Name</th>
-							<th>Email</th>
-							<th>Phone</th>
-						<tr>
-				<?php	foreach($rows as $row): ?>
-						<tr>
-							<td><?php echo $row['c_id']?></td>
-							<td><?php echo $row['c_name']?></td>
-							<td><?php echo $row['c_email']?></td>
-							<td><?php echo $row['c_phone']?></td>
-						</tr>
-			<?php endforeach; }} ?>
-			</tbody>
-			</table>
-			<?php if (!empty($_POST['c_orders_button'])) {
-			if (!empty($rows)) { ?>
-					<table id="tdisplay" border="1px" width="100%" cellpadding="4px">
-					<tbody align="center">
-						<tr>
-							<th>Customer ID</th>
-							<th>Customer Name</th>
-							<th>Transaction ID</th>
-						<tr>
-				<?php	foreach($rows as $row): ?>
-						<tr>
-							<td><?php echo $row['c_id']?></td>
-							<td><?php echo $row['c_name']?></td>
-							<td><?php echo $row['tid']?></td>
-						</tr>
-			<?php endforeach; }} ?>
-					</tbody>
-					</table>
-					&nbsp;
-			</div>
-	</div>
-	<div id="right" class="column">&nbsp;</div>
+				$existsnew = False;
+				foreach ($pids as $pid){
+					if ($pid == $_POST['updatenew']){
+						$existsnew = True;
+						break;
+					}
+				}
+				if ($existsnew){
+					echo "New value already exists in the table. Please choose a value that doesn't exist to update";
+					$canupdate = False;
+				}
+			}
+			
+			
+			
+			?>
+	<table>
+			<tr>
 
-</body>
-</html>
+				<th>Supplier Name</th>
+				<th>Product Name</th>
+				<th>Product ID</th>
+				<th>Current Stock</th>
+				<th>Product Type</th>
+				<th>Price</th>
+			<tr>
+			<?php foreach($rows as $row):?>
+			
+			<tr>
+				<td><?php echo $row['s_name']?></td>
+				<td><?php echo $row['s_pname']?></td>
+				<td><?php echo $row['s_pid']?></td>
+				<td><?php echo $row['s_stock']?></td>
+				<td><?php echo $row['s_type']?></td>
+				<td><?php echo $row['s_price']?></td>
+			</tr>
+		<?php endforeach; ?>
+	</table>
+	<?php
+		//$_POST['updateold'] is the value that will be replaced with $_POST['updatenew']
+		if ($canupdate){
+			echo "setup SQL statement to update the PID value using variables in comments";
+			
+		}
+		
+		
+		
+		
