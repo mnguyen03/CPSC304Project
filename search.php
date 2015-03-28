@@ -28,9 +28,14 @@ a {
 	width: 25%;
 }
 
+#display {
+	width: 60%;
+	padding-top: 7%;
+	padding-left: 7%;
+}
+
 #header {
 	background: #384E82;
-	height: 100%;
 	border: 1px solid white;
 }
 
@@ -38,8 +43,38 @@ a {
 	padding-bottom: 15px;
 }
 
+#statusbar {
+	margin-bottom: 15px;
+	color: white;
+	background-color: green;
+}
+
 .search{
-	width: 450px;
+	width: 350px;
+}
+
+input#logoutbtn {
+	border: 0px;
+	color: white;
+	background: #051C50;
+	font-family: "Century Gothic";
+	font-size: 15px;
+	font-variant: small-caps;
+}
+
+input#evenbtn {
+	border: 0px;
+	background: white;
+	font-family: Verdana;
+	font-size: 15px;
+}
+
+input#oddbtn {
+	border: 0px;
+	background: #384E82;
+	color: white;
+	font-family: Verdana;
+	font-size: 15px;
 }
 
 h1 {
@@ -48,9 +83,7 @@ h1 {
 	font-weight: bold; 
 	font-variant: small-caps;
 	font-family: Arial Black;
-	line-height: 50px; 
-	padding-top: 2px; 
-	padding-bottom: 5px;
+	line-height: 45px; 
 }
 
 h2 {
@@ -75,14 +108,69 @@ table#items tr:nth-child(even) {
 	color: white;
 }
 
+form {
+	display: inline;
+}
+
 </style>
 	<body>
 	<div id="wrapper">
 	<div id="left" class="column">&nbsp;</div>
 	<div id="middle" class="column">
 		<center>
-			<div id="header"><h1><a class="header" href="computerstore.php">H.T.M.L. Computer Store</a></h1></div>
-			<div id="nav"><h2><a href="login.php">Login</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;My Account&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Shopping Cart</h2></div>
+			<a href="computerstore.php">
+				<IMG SRC="304Matrix.jpg" alt="Make sure you put 304Matrix.jpg in the correct folder" width =100% height="360"/>
+			</a>
+			<div id="nav"><h2><a href="login.php">Login</a> | 
+							  <a href="account.php">My Account</a> |
+							  <a href="shoppingcart.php">Shopping Cart</a> |
+							  <?php
+								if ((!empty($_SESSION)) && ($_SESSION['admin'] = "true")) { ?>
+							  	  <a href="admin.php">Admin</a> | 
+								<?php } else { ?>
+								  <a href="adminlogin.php">Admin</a> |
+								<?php }	?>
+								  
+							<form action="logout.php"><input id="logoutbtn" type="submit" value="Log Out"></input></form>
+						  </h2>
+			</div>
+			<div id="statusbar">
+				<?php
+					try{
+						if(!$pdo = new PDO('mysql:host=localhost;dbname=computerstoredb',
+						'root',
+						'admin1')
+						){
+					$sad = "\r\n :( \r\n";
+					echo nl2br($sad);
+					exit;
+					}
+	
+	$yay = "\r\n Status: Connected to Database! \r\n";
+	echo $yay;
+	}
+	catch (PDOException $Exception){
+		$error = "\r\nCould not connect: " . $Exception->getMessage( );
+		echo nl2br($error);
+	}
+	
+	session_start();
+	
+	if (!empty($_SESSION["user"])) {
+		echo "<br />" . "Welcome " . $_SESSION["user"];
+	} else {
+		echo "<br />" . "Currently not logged in.";
+	}
+	
+/* 	$sql = "SELECT c_name FROM customer_account ORDER BY c_name";
+	echo "Customers: <br />";
+	foreach ($pdo->query($sql) as $row) {
+		echo nl2br($row['c_name']);
+		echo "<br />";
+	}
+	 */
+?>
+			</div>
 			<div id="searchbar">
 				<form action="search.php" method="post">
 				<select name="itemType">
@@ -99,9 +187,9 @@ table#items tr:nth-child(even) {
 					<option value="10">Video Card</option>
 				</select>
 				<input type="text" name="search" class="search" value="" placeholder="Search for Product Name..."></input>
-				<table id="attributes" width="70%" cellpadding="5px" border="1px">
+				<table id="attributes" width="50%" cellpadding="5px">
 				<tr>
-					<td>Select Attributes to Display:</td>
+					<td colspan="2">Select Attributes to Display:</td>
 				</tr>
 				<tr>
 					<td>
@@ -114,35 +202,20 @@ table#items tr:nth-child(even) {
 						<input type="checkbox" name="prodattribute[]" value="s_type">Product Type</input><br>
 						<input type="checkbox" name="prodattribute[]" value="s_price">Price</input>
 					</td>
-				</tr>
-				
+					<td>&nbsp;</td>
+					<td colspan="2"><center><input type="submit" value="Search"/></center></td>
+				</tr>				
 				<input type="submit" value="Search"/>
 				</form>
 				<form action="advancedsearch.php">
 					<button>Advanced Search</button>
-				</form>
+				</form> <br><br>
 			</div>
 		</center>
 		<center>
 
 <?php
-   try{
-   if(!$pdo = new PDO('mysql:host=localhost;dbname=computerstoredb',
-    'root',
 
-    'admin1')
-	){
-	$sad = "\r\n :( \r\n";
-	echo nl2br($sad);
-    exit;
-	}
-	$yay = "\r\n Hooray, we connected to MySQL \r\n";
-	echo nl2br($yay);
-	}
-	catch (PDOException $Exception){
-		$error = "\r\nCould not connect: " . $Exception->getMessage( );
-		echo nl2br($error);
-	}
 	$sql = "SELECT * FROM supplies_item 
 			WHERE s_pname LIKE ? AND 
 			s_type LIKE ? ORDER BY s_type";
@@ -164,12 +237,12 @@ table#items tr:nth-child(even) {
 	}
 	
 	if (!isset($_POST['prodattribute'])):
-	echo "\r\n No attributes selected to display. Displaying all attributes. \r\n"
+	echo "\r\n No attributes selected to display. Displaying all attributes.\r\n";
 	
 	?>
+	
 	<table>
 			<tr>
-
 				<th>Supplier Name</th>
 				<th>Product Name</th>
 				<th>Product ID</th>
@@ -185,7 +258,7 @@ table#items tr:nth-child(even) {
 				<td><?php echo $row['s_pid']?></td>
 				<td><?php echo $row['s_stock']?></td>
 				<td><?php echo $row['s_type']?></td>
-				<td><?php echo $row['s_price']?></td>
+				<td><?php echo "$" . $row['s_price']?></td>
 			</tr>
 		<?php endforeach; ?>
 	</table>

@@ -28,14 +28,19 @@ a {
 	width: 25%;
 }
 
+#display {
+	width: 60%;
+	padding-top: 7%;
+	padding-left: 7%;
+}
+
 #header {
 	background: #384E82;
-	height: 100%;
 	border: 1px solid white;
 }
 
-#search {
-	width: 100%;
+#searchbar {
+	padding-bottom: 15px;
 }
 
 #statusbar {
@@ -45,7 +50,31 @@ a {
 }
 
 .search{
-	width: 300px;
+	width: 350px;
+}
+
+input#logoutbtn {
+	border: 0px;
+	color: white;
+	background: #051C50;
+	font-family: "Century Gothic";
+	font-size: 15px;
+	font-variant: small-caps;
+}
+
+input#evenbtn {
+	border: 0px;
+	background: white;
+	font-family: Verdana;
+	font-size: 15px;
+}
+
+input#oddbtn {
+	border: 0px;
+	background: #384E82;
+	color: white;
+	font-family: Verdana;
+	font-size: 15px;
 }
 
 h1 {
@@ -54,9 +83,7 @@ h1 {
 	font-weight: bold; 
 	font-variant: small-caps;
 	font-family: Arial Black;
-	line-height: 50px; 
-	padding-top: 2px; 
-	padding-bottom: 5px;
+	line-height: 45px; 
 }
 
 h2 {
@@ -75,6 +102,7 @@ table#advsearch {
 	align: middle;
 	font-size: 15px;
 	border-collapse: collapse;
+	margin-bottom: 10px;
 }
 
 table#advsearch tr:nth-child(even) {
@@ -92,18 +120,24 @@ form {
 	<div id="left" class="column">&nbsp;</div>
 	<div id="middle" class="column">
 		<center>
-			<div id="header">
-				<h1><a class="header" href="computerstore.php">H.T.M.L. Computer Store</a></h1>
+			<a href="computerstore.php">
+				<IMG SRC="304Matrix.jpg" alt="Make sure you put 304Matrix.jpg in the correct folder" width =100% height="360"/>
+			</a>
+			<div id="nav"><h2><a href="login.php">Login</a> | 
+							  <a href="account.php">My Account</a> |
+							  <a href="shoppingcart.php">Shopping Cart</a> |
+							  <?php
+								if ((!empty($_SESSION)) && ($_SESSION['admin'] = "true")) { ?>
+							  	  <a href="admin.php">Admin</a> | 
+								<?php } else { ?>
+								  <a href="adminlogin.php">Admin</a> |
+								<?php }	?>
+								  
+							<form action="logout.php"><input id="logoutbtn" type="submit" value="Log Out"></input></form>
+						  </h2>
 			</div>
-			
-			<div id="nav">
-				<h2><a href="login.php">Login</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;My Account&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Shopping Cart</h2>
-			</div>
-			
 			<div id="statusbar">
 				<?php
-					$title = "SQL Query Test";
-					echo nl2br($title);
 					try{
 						if(!$pdo = new PDO('mysql:host=localhost;dbname=computerstoredb',
 						'root',
@@ -114,14 +148,52 @@ form {
 					exit;
 					}
 	
-					$yay = "\r\n Hooray, we connected \r\n";
-					echo nl2br($yay);
-					}
-					catch (PDOException $Exception){
-						$error = "\r\nCould not connect: " . $Exception->getMessage( );
-						echo nl2br($error);
-					}
-				?>		
+	$yay = "\r\n Status: Connected to Database! \r\n";
+	echo $yay;
+	}
+	catch (PDOException $Exception){
+		$error = "\r\nCould not connect: " . $Exception->getMessage( );
+		echo nl2br($error);
+	}
+	
+	session_start();
+	
+	if (!empty($_SESSION["user"])) {
+		echo "<br />" . "Welcome " . $_SESSION["user"];
+	} else {
+		echo "<br />" . "Currently not logged in.";
+	}
+	
+/* 	$sql = "SELECT c_name FROM customer_account ORDER BY c_name";
+	echo "Customers: <br />";
+	foreach ($pdo->query($sql) as $row) {
+		echo nl2br($row['c_name']);
+		echo "<br />";
+	}
+	 */
+?>
+			</div>
+					<div id="searchbar">
+				<form action="search.php" method="post">
+				<select name="itemType">
+					<option value="0">Select an item type</option>
+					<option value="1">Case</option>
+					<option value="2">Headset</option>
+					<option value="3">Monitor</option>
+					<option value="4">Motherboard</option>
+					<option value="5">Mouse</option>
+					<option value="6">Power Supply</option>
+					<option value="7">Processor</option>
+					<option value="8">RAM</option>
+					<option value="9">SSD</option>
+					<option value="10">Video Card</option>
+				</select>
+				<input type="text" name="search" class="search" value="" placeholder="Search for Product Name..."></input>
+				<input type="submit" value="Search"/>
+				</form>
+				<form action="advancedsearch.php">
+					<button>Advanced Search</button>
+				</form>
 			</div>
 			
 		<div id ="search">
@@ -140,7 +212,7 @@ form {
 						<input type="checkbox" name="type[]" value="Power Supply">Power Supplies</input><br>
 						<input type="checkbox" name="type[]" value="SSD">SSD</input><br>
 						<input type="checkbox" name="type[]" value="Mouse">Mice</input><br>
-						<input type="checkbox" name="type[]" value="Headset">Headsets</input><br><br>
+						<input type="checkbox" name="type[]" value="Headset">Headsets</input><br>
 						<input type="checkbox" name="type[]" value="Case">Cases</input><br><br>
 					</td>
 					<td>
