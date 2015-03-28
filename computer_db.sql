@@ -25,7 +25,7 @@ CREATE TABLE Customer_Account(
  	c_phone INT NOT NULL,
 	c_pass VARCHAR(20),
  	PRIMARY KEY (c_id, c_email, c_phone)
- 	);
+	);
 
 CREATE TABLE Supplier(
  	s_name VARCHAR(30) NOT NULL,
@@ -56,7 +56,6 @@ CREATE TABLE ShoppingCart(
  	PRIMARY KEY (c_id),
  	CONSTRAINT link_account FOREIGN KEY (c_id, c_email, c_phone)
  	REFERENCES Customer_Account(c_id, c_email, c_phone)
- 	ON UPDATE CASCADE ON DELETE CASCADE
  	);
 
 CREATE TABLE Purchase(
@@ -68,6 +67,7 @@ CREATE TABLE Purchase(
  	PRIMARY KEY (tid, s_pid, s_name),
 	CONSTRAINT link_item FOREIGN KEY (s_pid, s_name)
 	REFERENCES Supplies_Item(s_pid, s_name)
+	ON DELETE CASCADE ON UPDATE CASCADE
  	);
 
 CREATE TABLE Purchase_ShippingMethod(
@@ -92,7 +92,6 @@ CREATE TABLE Admin_Manages(
  	FOREIGN KEY (c_id) REFERENCES Customer_Account(c_id)
 	ON DELETE CASCADE ON UPDATE CASCADE,
  	FOREIGN KEY (e_id) REFERENCES Admin(e_id)
-	ON DELETE CASCADE ON UPDATE CASCADE
  	);
 
 CREATE TABLE Admin_Edits(
@@ -390,3 +389,13 @@ INSERT INTO Admin_Manages (c_id, e_id) VALUES (25, 003);
 INSERT INTO Admin_Edits (e_id, s_name, s_pid) VALUES (001, 'Asus', 4503);
 INSERT INTO Admin_Edits (e_id, s_name, s_pid) VALUES (003, 'Corsair', 8810);
 INSERT INTO Admin_Edits (e_id, s_name, s_pid) VALUES (004, 'ASRock', 4500);
+
+INSERT INTO ShoppingCart(total_price, qty, c_id, c_email, c_phone) VALUES(1000, 5, 0, 'adrian@gmail.com',5550001);
+
+INSERT INTO ShoppingCart(total_price, qty, c_id, c_email, c_phone) VALUES(200, 4, 1,'brandon@gmail.com',5550002);
+
+INSERT INTO ShoppingCart(total_price, qty, c_id, c_email, c_phone) VALUES(500, 3, 2, 'charlie@gmail.com',5550003);
+
+INSERT INTO ShoppingCart(total_price, qty, c_id, c_email, c_phone) VALUES(750, 8, 3, 'david@gmail.com',5550004);
+
+INSERT INTO ShoppingCart(total_price, qty, c_id, c_email, c_phone) VALUES(20, 1, 4, 'emily@gmail.com',5550005);
